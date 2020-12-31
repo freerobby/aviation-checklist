@@ -1,0 +1,23 @@
+Taxi,Before Engine Start,Passenger Briefing,Complete
+Taxi,Before Engine Start,Seats & Seatbelts,Secure
+Taxi,Before Engine Start,Circuit Breakers,Check
+Taxi,Before Engine Start,Electrical Switches,Verify Off
+Taxi,Before Engine Start,Avionics Master,Verify Off
+Taxi,Before Engine Start,Fuel Selector,Verify Both
+Taxi,Before Engine Start,Flight Controls,Check
+Taxi,Before Engine Start,Brakes,Check Pressure
+Taxi,Engine Start,Mixture,Rich
+Taxi,Engine Start,Carb Heat,Off
+Taxi,Engine Start,Master (Battery),On
+Taxi,Engine Start,Beacon,On
+Taxi,Engine Start,Throttle,Pump 0-4
+Taxi,Engine Start,Throttle,1/8" Open
+Taxi,Engine Start,Propeller Area,Clear
+Taxi,Engine Start,Starter,Engage
+Taxi,Engine Start,Throttle,1000 RPM
+Taxi,Engine Start,Oil Pressure,Check
+Taxi,Engine Start,Mixture,Lean 2"
+Taxi,Engine Start,Master (Alternator),On
+Taxi,Taxi,Brakes,Check Friction
+Taxi,Taxi,Flight Instruments,Check
+Taxi,Taxi,Flight Controls,Position for Wind
