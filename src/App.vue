@@ -1,17 +1,36 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app-7">
+    <checklist
+        v-bind:title="beforeEngineStartChecklist.title"
+        v-bind:items="beforeEngineStartChecklist.items"
+    ></checklist>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Checklist from './components/Checklist.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Checklist
+  },
+  data: function() {
+    return {
+      beforeEngineStartChecklist: {
+        title: 'Before Engine Start',
+        items: [
+          { id: 0, subject: 'Passenger Briefing', operation: 'Complete' },
+          { id: 1, subject: 'Seats & Seatbelts', operation: 'Secure' },
+          { id: 2, subject: 'Circuit Breakers', operation: 'Check' },
+          { id: 3, subject: 'Electrical Switches', operation: 'Verify Off'},
+          { id: 4, subject: 'Avionics Master', operation: 'Verify Off'},
+          { id: 5, subject: 'Fuel Selector', operation: 'Verify Both'},
+          { id: 6, subject: 'Flight Controls', operation: 'Check'},
+          { id: 7, subject: 'Brakes', operation: 'Check Pressure'}
+        ]
+      }
+    }
   }
 }
 </script>
