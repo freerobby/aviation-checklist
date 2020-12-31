@@ -1,7 +1,8 @@
 <template>
   <div id="app-7">
     <checklist-set
-        v-bind:checklists="checklistSet"
+        v-bind:title="checklistSet.title"
+        v-bind:checklists="checklistSet.checklists"
     ></checklist-set>
   </div>
 </template>
@@ -16,7 +17,9 @@ export default {
   },
   data: function() {
     return {
-      checklistSet: [
+      checklistSet: {
+        title: 'Taxi',
+        checklists: [
           {
             title: 'Before Engine Start',
             items: [
@@ -30,15 +33,16 @@ export default {
               { id: 7, subject: 'Brakes', operation: 'Check Pressure'}
             ]
           },
-        {
-          title: 'Taxi',
-          items: [
-            {id: 0, subject: 'Brakes', operation: 'Check Friction'},
-            {id: 1, subject: 'Flight Instruments', operation: 'Check'},
-            {id: 2, subject: 'Flight Controls', operation: 'Position for Wind'}
-          ]
-        }
-      ]
+          {
+            title: 'Taxi',
+            items: [
+              {id: 0, subject: 'Brakes', operation: 'Check Friction'},
+              {id: 1, subject: 'Flight Instruments', operation: 'Check'},
+              {id: 2, subject: 'Flight Controls', operation: 'Position for Wind'}
+            ]
+          }
+        ]
+      }
     }
   }
 }
