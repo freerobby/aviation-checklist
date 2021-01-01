@@ -1,6 +1,11 @@
 <template>
   <li>
-    {{ item.subject }} ... {{ item.operation }}
+    <div class="subject">
+      {{ item.subject }}
+    </div>
+    <div class="operation">
+      {{ item.operation}}
+    </div>
   </li>
 </template>
 
@@ -12,5 +17,13 @@ export default {
 </script>
 
 <style scoped>
-
+div.subject {
+  float: left;
+  height: auto;
+  display: block;
+  clear: both;
+}
+div.operation {
+  float: right;
+}
 </style>

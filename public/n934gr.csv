@@ -8,7 +8,7 @@ Preflight,Cockpit,Electrical Switches,Verify Off
 Preflight,Cockpit,Master Switch (Battery),On
 Preflight,Cockpit,Pitot Heat,"On, Check, Off"
 Preflight,Cockpit,Exterior Lights,"On, Check, Off"
-Preflight,Cockpit,Flaps,40 Degrees
+Preflight,Cockpit,Flaps,40°
 Preflight,Cockpit,Alternate Static,Verify on VSI
 Preflight,Cockpit,Hobbs & Tach,Record
 Preflight,Cockpit,Master Switch (Battery),Off
@@ -16,6 +16,32 @@ Preflight,Cockpit,Magnetic Compass,Check
 Preflight,Cockpit,Fuel Selector,Both
 Preflight,Cockpit,Fire Extinguisher,Check
 Preflight,Cockpit,Windows,Close
+Preflight,Nose,Leaks,Check
+Preflight,Nose,Fuel Drain,Check,No Drips
+Preflight,Nose,Oil,Verify 5-6L
+Preflight,Nose,Engine Heat,"Verify LED, Unplug"
+Preflight,Nose,Prop & Spinner,Check
+Preflight,Nose,Alternator Belt,Check
+Preflight,Nose,Air Inlets,Check
+Preflight,Nose,Air Filter,Check
+Preflight,Nose,Auxiliary Landing Gear,Check
+Preflight,Nose,Chock,Remove
+Preflight,Wings,Air Inlet,Check
+Preflight,Wings,Stall Horn,Check
+Preflight,Wings,Pitot,Check
+Preflight,Wings,Fuel Tank Sump,"Drain, Check"
+Preflight,Wings,Fuel Tank Vent,Check
+Preflight,Wings,Wingtip,Check
+Preflight,Wings,Aileron,Check
+Preflight,Wings,Flap,Check
+Preflight,Wings,Main Gear & Brake,Check
+Preflight,Wings,Tie Down/Chock,Remove
+Preflight,Empennage,Baggage Door,Locked
+Preflight,Empennage,Elevator,Check and Clear
+Preflight,Empennage,Trim Tab,Check and Clear
+Preflight,Empennage,Rudder,Check and Clear
+Preflight,Empennage,Antennas,Check
+Preflight,Empennage,Tie Down/Chock,Remove
 Taxi,Before Engine Start,Passenger Briefing,Complete
 Taxi,Before Engine Start,Seats & Seatbelts,Secure
 Taxi,Before Engine Start,Circuit Breakers,Check
@@ -47,3 +73,150 @@ Taxi,Before Taxi,Radio,CLNC; Ground/CTAF
 Taxi,Taxi,Brakes,Check Friction
 Taxi,Taxi,Flight Instruments,Check
 Taxi,Taxi,Flight Controls,Position for Wind
+Takeoff,Engine Run-Up,Brakes,Hold
+Takeoff,Engine Run-Up,Fuel Selector,Verify Both
+Takeoff,Engine Run-Up,Mixture (Below 3000’ ASL),Rich
+Takeoff,Engine Run-Up,Throttle,1700 RPM
+Takeoff,Engine Run-Up,Mags (Drop 125, 50 Diff),Check
+Takeoff,Engine Run-Up,Engine Instruments,Check
+Takeoff,Engine Run-Up,Ammeter (Verify Reading),Check
+Takeoff,Engine Run-Up,Carb Heat (RPM Drop/No Rise),On
+Takeoff,Engine Run-Up,Throttle,Idle
+Takeoff,Engine Run-Up,Carb Heat,Off
+Takeoff,Engine Run-Up,Throttle,1000 RPM
+Takeoff,Before Takeoff,Pitot Heat,As Required
+Takeoff,Before Takeoff,Flight Instruments,Check
+Takeoff,Before Takeoff,Trim,Takeoff
+Takeoff,Before Takeoff,Flaps (Normal/Short),Set 0
+Takeoff,Before Takeoff,Flaps (Soft),Set 10
+Takeoff,Before Takeoff,Seats & Seatbelts,Secure
+Takeoff,Before Takeoff,Doors & Windows,Secure
+Takeoff,Before Takeoff,Lights,On
+Takeoff,Before Takeoff,Takeoff Briefing,Complete
+Takeoff,Before Takeoff,Radio,Tower/CTAF
+Takeoff,Takeoff,Carb Heat,Off
+Takeoff,Takeoff,Mixture (Below 3000’ ASL),Rich
+Takeoff,Takeoff,Throttle,Full
+Takeoff,Takeoff,Power (2300-2600 RPM),Check
+Takeoff,Takeoff,Engine Instruments,Check
+Takeoff,Takeoff,Airspeed,Check
+Takeoff,Takeoff,Rotate,55 KIAS
+Takeoff,Takeoff,Pitch for Vx or Vy,62/73 KIAS
+Takeoff,Takeoff,Short Field Clear,57 KIAS
+Takeoff,Climb,Flaps,Retract Above 65 KIAS
+Takeoff,Climb,Normal Climb,75-85 KIAS
+In Flight,Cruise,Power,As Required
+In Flight,Cruise,Mixture,Lean as Required
+In Flight,Cruise,Lights,As Required
+In Flight,Descent,Carb Heat,As Required
+In Flight,Descent,Power,As Required
+In Flight,Descent,Mixture,Rich as Required
+In Flight,Descent,Lights,As Required
+In Flight,Descent,Seats & Seatbelts,Secure
+In Flight,Landing,Fuel Selector,Both
+In Flight,Landing,Mixture (Below 3000’ ASL),Rich
+In Flight,Landing,Carb Heat,Full Heat
+In Flight,Landing,Downwind,Reduce to Vfe (85 KIAS)
+In Flight,Landing,Flaps,As Required
+In Flight,Landing,Landing (0°),65-75 KIAS
+In Flight,Landing,Landing (30°),60-70 KTAS
+In Flight,Landing,Landing (40°),55-65 KTAS
+In Flight,Landing,"Landing (30°, Short Field)",62 KTAS
+In Flight,Landing,"Landing (40°, Short Field)",60 KTAS
+In Flight,After Landing,Radio,Ground/CTAF
+In Flight,After Landing,Carb Heat,Off
+In Flight,After Landing,Throttle,1000 RPM
+In Flight,After Landing,Flaps,Retract
+In Flight,After Landing,Mixture,Lean
+In Flight,After Landing,Lights,As Required
+In Flight,After Landing,Pitot Heat,Off
+In Flight,Shutdown,Call for Fuel,As Required
+In Flight,Shutdown,Avionics Master,Off
+In Flight,Shutdown,Throttle	Idle
+In Flight,Shutdown,Mixture,Lean to Idle Cutoff
+In Flight,Shutdown,Hobbs & Tach,Record
+In Flight,Secure,Mags,"Off, Key Out"
+In Flight,Secure,Electrical Switches,Off
+In Flight,Secure,Master Switches,Off
+In Flight,Secure,Flight Control Lock,Install
+In Flight,Secure,Fuel Selector,Left or Right
+In Flight,Secure,Tie Downs or Chocks,Secure
+In Flight,Secure,Engine Heat,Plug in as Required
+In Flight,Secure,Engine Heat,Verify LED indicator
+Reference,V Speeds,Vne,160 KIAS
+Reference,V Speeds,Vno,128 KIAS
+Reference,V Speeds,Vg (2150 lbs),62 KIAS
+Reference,V Speeds,Vg (1750 lbs),56 KIAS
+Reference,V Speeds,Va (2150 lbs),95 KIAS
+Reference,V Speeds,Va (1750 lbs),85 KIAS
+Reference,V Speeds,Vfe,85 KIAS
+Reference,V Speeds,"Vx(0°, 0’ MSL)",62 KIAS
+Reference,V Speeds,"Vx(0°, 10,000’)",67 KIAS
+Reference,V Speeds,"Vy(0°, 0’ MSL)",73 KIAS
+Reference,V Speeds,"Vy(0°, 10,000’+)",72 KIAS
+Reference,V Speeds,Vs0,43 KIAS
+Reference,V Speeds,Vs1,50 KIAS
+Reference,V Speeds,Vra (2150 lbs),95 KIAS
+Reference,V Speeds,Vra (1750 lbs),85 KIAS
+Reference,V Speeds,Max Demo Crosswind,15 KNOTS
+Reference,Specifications,Usable Fuel,50 gal
+Reference,Specifications,Start/Taxi,1.4 gal
+Reference,Specifications,Climb Fuel,11 gal
+Reference,Specifications,Max Demo Crosswind,15 kts
+Reference,Specifications,Cruise 3000’,2500 RPM/105 KIAS
+Reference,Specifications,Cruise GPH 3000’,8.5 gal
+Reference,Takeoff Briefing,Wind direction,Note
+Reference,Takeoff Briefing,Take off,"Normal, short, soft field"
+Reference,Takeoff Briefing,Rejected takeoff,Straight ahead
+Reference,Takeoff Briefing,Rotate+ w/ runway,Straight ahead
+Reference,Takeoff Briefing,Rotate+ no runway,Look 30°
+Reference,Takeoff Briefing,Rotate+ 800’+ AGL,Turn around
+Reference,Passenger Briefing,No smoking
+Reference,Passenger Briefing,Seatbelts & shoulder harnesses
+Reference,Passenger Briefing,"Exits: doors, windows, forcible"
+Reference,Passenger Briefing,Clear plane in emergency
+Reference,Passenger Briefing,Evacuation rally point
+Reference,Passenger Briefing,Ditching procedure (flotation)
+Reference,Passenger Briefing,Location of survival gear
+Reference,Passenger Briefing,Evac plan for off-airport landing
+Reference,Passenger Briefing,Sterile cockpit
+Reference,Passenger Briefing,Point out traffic
+Reference,Crew Briefing,Establish PIC
+Reference,Crew Briefing,3-way control exchange
+Reference,Crew Briefing,State who flies in emergency
+Reference,Crew Briefing,Both fly until control known
+Emergency,Engine Fire on Start,Starter,Continue Cranking 2-3 mins
+Emergency,Engine Fire on Start,Mixture,Lean to Idle Cutoff
+Emergency,Engine Fire on Start,Throttle,Open
+Emergency,Engine Fire on Start,Fuel Selector,Off
+Emergency,Engine Fire on Start,Mags,Off
+Emergency,Engine Fire on Start,Master Switches,Off
+Emergency,Engine Fire on Start,Fire Extinguisher,Activate
+Emergency,Engine Power Loss,Airspeed,62 KIAS
+Emergency,Engine Power Loss,Carb Heat,Full Heat
+Emergency,Engine Power Loss,Mixture,Rich
+Emergency,Engine Power Loss,Fuel Selector,Both
+Emergency,Engine Power Loss,Mags,Both
+Emergency,Engine Power Loss,Engine Instruments,Check
+Emergency,Power Off Landing,Trim for Best Glide,62 KIAS
+Emergency,Power Off Landing,Landing Area,Identify
+Emergency,Power Off Landing,Radio,Mayday
+Emergency,Power Off Landing,Transponder,7700
+Emergency,Power Off Landing,Final Approach (40°),65 KIAS
+Emergency,Power Off Landing,Mixture,Lean to Idle Cutoff
+Emergency,Power Off Landing,Fuel Selector,Off
+Emergency,Power Off Landing,Mags,Off
+Emergency,Power Off Landing,Master Switches,Off
+Emergency,Power Off Landing,Seat Belts,Secure
+Emergency,Power Off Landing,Doors,Unlatched
+Emergency,Engine Fire in Flight,Mixture,Lean to Idle Cutoff
+Emergency,Engine Fire in Flight,Fuel Selector,Off
+Emergency,Engine Fire in Flight,Throttle,Closed
+Emergency,Engine Fire in Flight,Master Switches,Off
+Emergency,Engine Fire in Flight,Airspeed to Extinguish,105 KIAS
+Emergency,Engine Fire in Flight,"Vents, Cabin Heat, Air",Closed
+Emergency,Engine Fire in Flight,Airspeed,Increase to extinguish
+Emergency,Engine Fire in Flight,Land,Immediately
+Emergency,Squawk Codes,Hijacking,7500
+Emergency,Squawk Codes,Radio Failure,7600
+Emergency,Squawk Codes,Mayday,7700
