@@ -1,8 +1,10 @@
 <template>
   <div>
     <checklist-set
+        v-for="checklistSet in checklistSets"
         v-bind:title="checklistSet.title"
         v-bind:checklists="checklistSet.checklists"
+        v-bind:key="checklistSet.id"
     ></checklist-set>
   </div>
 </template>
@@ -18,9 +20,10 @@ export default {
   components: {
     ChecklistSet
   },
+  // props: ["checklistSets"],
   data() {
     return {
-      checklistSet: {
+      checklistSets: [{
         title: 'Taxi',
         checklists: [
           {
@@ -45,7 +48,7 @@ export default {
             ]
           }
         ]
-      }
+      }]
     }
   },
   created: function() {
@@ -62,7 +65,6 @@ export default {
       });
     },
     handle_update: function(results) {
-      this.checklistSet = {'title': 'foo', 'checklists': []}
       var csv_data = results.data
       var checklist_sets = [];
 
@@ -70,7 +72,7 @@ export default {
       var current_checklist = '';
       for (let i = 0; i < csv_data.length; i++) {
         if (csv_data[i][0] !== current_checklistset) {
-          checklist_sets.push({title: csv_data[i][0], 'checklists': []});
+          checklist_sets.push({title: csv_data[i][0], checklists: []});
           current_checklistset = csv_data[i][0];
         }
         if (csv_data[i][1] !== current_checklist) {
@@ -81,8 +83,7 @@ export default {
         checklist_sets.slice(-1)[0]['checklists'].slice(-1)[0].items.push({subject: csv_data[i][2], operation: csv_data[i][3]});
       }
 
-      console.log(checklist_sets[0])
-      this.checklistSet = checklist_sets[0];
+      this.checklistSets = checklist_sets;
     }
   }
 }

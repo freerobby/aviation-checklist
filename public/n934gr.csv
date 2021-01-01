@@ -1,3 +1,21 @@
+Preflight,Cockpit,Mags,Off,Key Out
+Preflight,Cockpit,Mixture,Lean to Idle
+Preflight,Cockpit,Throttle,Closed
+Preflight,Cockpit,ARROW,Verify Present
+Preflight,Cockpit,Flight Control Lock,Remove
+Preflight,Cockpit,Avionics Master,Verify Off
+Preflight,Cockpit,Electrical Switches,Verify Off
+Preflight,Cockpit,Master Switch (Battery),On
+Preflight,Cockpit,Pitot Heat,"On, Check, Off"
+Preflight,Cockpit,Exterior Lights,"On, Check, Off"
+Preflight,Cockpit,Flaps,40 Degrees
+Preflight,Cockpit,Alternate Static,Verify on VSI
+Preflight,Cockpit,Hobbs & Tach,Record
+Preflight,Cockpit,Master Switch (Battery),Off
+Preflight,Cockpit,Magnetic Compass,Check
+Preflight,Cockpit,Fuel Selector,Both
+Preflight,Cockpit,Fire Extinguisher,Check
+Preflight,Cockpit,Windows,Close
 Taxi,Before Engine Start,Passenger Briefing,Complete
 Taxi,Before Engine Start,Seats & Seatbelts,Secure
 Taxi,Before Engine Start,Circuit Breakers,Check
@@ -18,6 +36,14 @@ Taxi,Engine Start,Throttle,1000 RPM
 Taxi,Engine Start,Oil Pressure,Check
 Taxi,Engine Start,Mixture,Lean 2"
 Taxi,Engine Start,Master (Alternator),On
+Taxi,Before Taxi,Avionics Master,On
+Taxi,Before Taxi,Flaps,Retract
+Taxi,Before Taxi,Lights,As Appropriate
+Taxi,Before Taxi,ATIS,Check
+Taxi,Before Taxi,Flight Instruments,Set
+Taxi,Before Taxi,Transponder,"Squawk, Alt Mode"
+Taxi,Before Taxi,Nav/GPS,Set
+Taxi,Before Taxi,Radio,CLNC; Ground/CTAF
 Taxi,Taxi,Brakes,Check Friction
 Taxi,Taxi,Flight Instruments,Check
 Taxi,Taxi,Flight Controls,Position for Wind
