@@ -42,7 +42,27 @@ export default {
         for (var checklist = 0; checklist < data[set].checklists.length; checklist++) {
           lines.push("CHKLST" + (num_checklists).toString() + ".TITLE, " + data[set].title + ": " + data[set].checklists[checklist].title);
           for (var i = 0; i < data[set].checklists[checklist].items.length; i++) {
-            lines.push("CHKLST" + (num_checklists).toString() + ".LINE" + (i+1).toString() + ", " + data[set].checklists[checklist].items[i].subject + ": " + data[set].checklists[checklist].items[i].operation);
+            if (data[set].checklists[checklist].items[i].operation !== undefined) {
+              lines.push(
+                  "CHKLST" +
+                  (num_checklists).toString() +
+                  ".LINE" + (i+1).toString() +
+                  ", " +
+                  data[set].checklists[checklist].items[i].subject +
+                  ": " +
+                  data[set].checklists[checklist].items[i].operation
+              );
+            }
+            else {
+              lines.push(
+                  "CHKLST" +
+                  (num_checklists).toString() +
+                  ".LINE" + (i+1).toString() +
+                  ", " +
+                  data[set].checklists[checklist].items[i].subject
+              );
+            }
+
           }
 
           num_checklists++;

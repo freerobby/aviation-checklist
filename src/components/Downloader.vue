@@ -3,7 +3,7 @@
     <p>Download for:</p>
     <ul>
       <li v-on:click="$emit('download_dynon')">
-        Dynon
+        <button>Dynon</button>
       </li>
     </ul>
   </div>
