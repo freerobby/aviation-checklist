@@ -5,13 +5,16 @@
         v-bind:title="checklistSet.title"
         v-bind:checklists="checklistSet.checklists"
         v-bind:key="checklistSet.id"
-        v-on:generate_lines="onGenerateLines"
     ></checklist-set>
+    <downloader
+        v-on:download_dynon="onDownloadDynon">
+    </downloader>
   </div>
 </template>
 
 <script>
 import ChecklistSet from './components/ChecklistSet.vue'
+import Downloader from "@/components/Downloader";
 
 import papa from "papaparse";
 
@@ -19,7 +22,8 @@ import papa from "papaparse";
 export default {
   name: 'App',
   components: {
-    ChecklistSet
+    ChecklistSet,
+    Downloader
   },
   data() {
     return {
@@ -30,15 +34,12 @@ export default {
     this.load_data();
   },
   methods: {
-    onGenerateLines: function() {
+    onDownloadDynon: function() {
       var data = this.checklistSets;
       var lines = [];
       var num_checklists = 0;
-      console.log(data);
       for (var set = 0; set < data.length; set++) {
-        console.log(data[set])
         for (var checklist = 0; checklist < data[set].checklists.length; checklist++) {
-          console.log(data[set].checklists[checklist])
           lines.push("CHKLST" + (num_checklists).toString() + ".TITLE, " + data[set].title + ": " + data[set].checklists[checklist].title);
           for (var i = 0; i < data[set].checklists[checklist].items.length; i++) {
             lines.push("CHKLST" + (num_checklists).toString() + ".LINE" + (i+1).toString() + ", " + data[set].checklists[checklist].items[i].subject + ": " + data[set].checklists[checklist].items[i].operation);
@@ -48,7 +49,13 @@ export default {
         }
       }
 
-      console.log(lines);
+      var link = document.createElement("a");
+      link.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(lines.join("\n")));
+      link.setAttribute("download", "checklist.txt")
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     },
     load_data: function() {
       var foo = this;
