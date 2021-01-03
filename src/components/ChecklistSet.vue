@@ -1,6 +1,10 @@
 <template>
   <div class="checklist-set">
-    <h1 v-bind:class="{emergency:(title === 'Emergency'), reference:(title === 'Reference')}"> {{title}} </h1>
+    <h1
+      v-bind:class="{emergency:(title === 'Emergency'), reference:(title === 'Reference')}"
+      v-on:click="$emit('generate_lines')">
+      {{title}}
+    </h1>
     <checklist v-for="checklist in checklists" v-bind:title="checklist.title" v-bind:items="checklist.items" v-bind:key="checklist.id"></checklist>
   </div>
 </template>

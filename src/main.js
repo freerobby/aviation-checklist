@@ -3,7 +3,6 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
-var v = new Vue({
+new Vue({
   render: h => h(App)
-})
-v.$mount('#app');
+}).$mount('#app');
