@@ -77,7 +77,7 @@ Takeoff,Engine Run-Up,Brakes,Hold
 Takeoff,Engine Run-Up,Fuel Selector,Verify Both
 Takeoff,Engine Run-Up,Mixture (Below 3000’ ASL),Rich
 Takeoff,Engine Run-Up,Throttle,1700 RPM
-Takeoff,Engine Run-Up,Mags (Drop 125, 50 Diff),Check
+Takeoff,Engine Run-Up,Mag Check,"(Drop 50 RPM, 125 max)"
 Takeoff,Engine Run-Up,Engine Instruments,Check
 Takeoff,Engine Run-Up,Ammeter (Verify Reading),Check
 Takeoff,Engine Run-Up,Carb Heat (RPM Drop/No Rise),On
