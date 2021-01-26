@@ -18,7 +18,6 @@ export default {
 <style scoped>
 @media screen {
   div {
-    float: left;
     display: block;
   }
 }

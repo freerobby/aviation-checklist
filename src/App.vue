@@ -6,6 +6,9 @@
         v-bind:checklists="checklistSet.checklists"
         v-bind:key="checklistSet.id"
     ></checklist-set>
+    <uploader
+        v-on:csv_loaded="onCSVLoaded">
+    </uploader>
     <downloader
         v-on:download_dynon="onDownloadDynon">
     </downloader>
@@ -13,8 +16,9 @@
 </template>
 
 <script>
-import ChecklistSet from './components/ChecklistSet.vue'
+import ChecklistSet from "@/components/ChecklistSet";
 import Downloader from "@/components/Downloader";
+import Uploader from "@/components/Uploader";
 
 import papa from "papaparse";
 
@@ -23,17 +27,24 @@ export default {
   name: 'App',
   components: {
     ChecklistSet,
-    Downloader
+    Downloader,
+    Uploader
   },
   data() {
     return {
       checklistSets: []
     }
   },
-  created: function() {
-    this.load_data();
-  },
   methods: {
+    onCSVLoaded: function(data) {
+      var handle = this;
+      papa.parse(data, {
+        download: true,
+        complete: function(results) {
+          handle.handle_update(results)
+        }
+      });
+    },
     onDownloadDynon: function() {
       var data = this.checklistSets;
       var lines = [];
@@ -76,15 +87,6 @@ export default {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    },
-    load_data: function() {
-      var foo = this;
-      papa.parse('http://localhost:8080/n934gr.csv', {
-        download: true,
-        complete: function(results) {
-          foo.handle_update(results)
-        }
-      });
     },
     handle_update: function(results) {
       var csv_data = results.data
