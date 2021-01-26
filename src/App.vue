@@ -95,7 +95,7 @@ export default {
       var current_checklistset = '';
       var current_checklist = '';
       for (let i = 0; i < csv_data.length; i++) {
-        if (csv_data[i][0] !== current_checklistset) {
+        if (csv_data[i][0] !== current_checklistset && csv_data[i][0] !== "") {
           checklist_sets.push({title: csv_data[i][0], checklists: []});
           current_checklistset = csv_data[i][0];
         }
