@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <div id="download">
     <p><strong>Download</strong></p>
     <ul>
-      <li v-on:click="$emit('download_dynon')">
-        <button>Dynon</button>
+      <li>
+        <a href="#" v-on:click="$emit('download_dynon')">Dynon</a>
       </li>
+      <li>Use print dialog to print or save to PDF (3 sections per page).</li>
     </ul>
   </div>
 </template>
@@ -17,10 +18,9 @@ export default {
 
 <style scoped>
 @media screen {
-  div {
+  div#download {
     float: left;
     display: block;
-    width: 33%;
   }
 }
 @media print {

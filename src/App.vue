@@ -2,12 +2,23 @@
   <div>
     <div id="header">
       <h1>Aviation Checklist Creator</h1>
+      <div class="instructions">
+        <p><strong>Instructions</strong></p>
+        <ol>
+          <li>Create a spreadsheet with four columns: <em>section</em>, <em>checklist</em>, <em>item</em>, <em>action</em>.</li>
+          <li>Export your spreadsheet to CSV format.</li>
+          <li>Drag your CSV file into the box to the right.</li>
+        </ol>
+        <p><strong>Demo</strong>: <a href="#" v-on:click="previewCSV">preview</a> what my <a href="/assets/checklists/n934gr.csv">example spreadsheet</a> generates.</p>
+        <downloader
+            v-if="checklistSets.length > 0"
+            v-on:download_dynon="onDownloadDynon">
+        </downloader>
+      </div>
+
       <uploader
           v-on:csv_loaded="onCSVLoaded">
       </uploader>
-      <downloader
-          v-on:download_dynon="onDownloadDynon">
-      </downloader>
       <div id="donate">
         <p><strong>Donate</strong></p>
         <p>This service is entirely free! If you find it useful, please donate.</p>
@@ -48,6 +59,18 @@ export default {
     }
   },
   methods: {
+    clearCSV: function() {
+      this.checklistSets = [];
+    },
+    previewCSV: function() {
+      var handle = this;
+      papa.parse('/assets/checklists/n934gr.csv', {
+        download: true,
+          complete: function(results) {
+          handle.handle_update(results)
+        }
+      });
+    },
     onCSVLoaded: function(data) {
       var handle = this;
       papa.parse(data, {
@@ -132,7 +155,15 @@ div {
 }
 
 @media screen {
-  div#donate {
+  div#header {
+    display: block;
+    clear: both;
+    float: left;
+    height: auto;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  div#donate, div .instructions {
     float: left;
     display: block;
     width: 33%;
@@ -142,7 +173,7 @@ div {
   div#header {
     display: none;
   }
-  div#donate {
+  div#donate, div .instructions {
     display: none;
   }
 }

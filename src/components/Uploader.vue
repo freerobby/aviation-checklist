@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <p><strong>Select CSV</strong></p>
-    <button v-on:click="onSelectCSV">Select a CSV</button>
-  <input
-      type="file"
-      style="display: none;"
-      ref="fileInput"
-      accept="text/csv"
-      v-on:change="onCSVSelected"/>
+  <div id="upload">
+    <p><strong>Build your own checklist</strong></p>
+    <div class="file_container"
+         v-on:drop.prevent="replaceFile"
+         v-on:dragover.prevent
+    >
+      <p>Drag your CSV here.</p>
+    </div>
   </div>
 </template>
 
@@ -15,12 +14,9 @@
 export default {
   name: "Uploader",
   methods: {
-    onSelectCSV: function() {
-      this.$refs.fileInput.click();
-    },
-    onCSVSelected: function(event) {
-      const csv_data = event.target.files[0]
-      this.$emit("csv_loaded", csv_data);
+    replaceFile: function(event) {
+      let csv_file = event.dataTransfer.files[0];
+      this.$emit("csv_loaded", csv_file);
     }
   }
 }
@@ -28,10 +24,18 @@ export default {
 
 <style scoped>
 @media screen {
-  div {
+  div#upload {
     float: left;
     display: block;
     width: 33%;
+  }
+  div#upload .file_container {
+    width: 90%;
+    height: 200px;
+    border: 2px dotted gray;
+  }
+  div#upload .file_container {
+    text-align: center;
   }
 }
 @media print {
