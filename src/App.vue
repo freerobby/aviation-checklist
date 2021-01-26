@@ -1,17 +1,29 @@
 <template>
   <div>
+    <div id="header">
+      <h1>Aviation Checklist Creator</h1>
+      <uploader
+          v-on:csv_loaded="onCSVLoaded">
+      </uploader>
+      <downloader
+          v-on:download_dynon="onDownloadDynon">
+      </downloader>
+      <div id="donate">
+        <p><strong>Donate</strong></p>
+        <p>This service is entirely free! If you find it useful, please donate.</p>
+        <ul>
+          <li>Bitcoin: bc1ql92yyypywyy4ajgcs2ha69yx2zyhg22ej96mx5</li>
+          <li>Venmo: @freerobby</li>
+          <li><a href="https://www.paypal.com/donate?hosted_button_id=TBK867SUY8FLU">Paypal</a></li>
+        </ul>
+      </div>
+    </div>
     <checklist-set
         v-for="checklistSet in checklistSets"
         v-bind:title="checklistSet.title"
         v-bind:checklists="checklistSet.checklists"
         v-bind:key="checklistSet.id"
     ></checklist-set>
-    <uploader
-        v-on:csv_loaded="onCSVLoaded">
-    </uploader>
-    <downloader
-        v-on:download_dynon="onDownloadDynon">
-    </downloader>
   </div>
 </template>
 
@@ -117,5 +129,21 @@ export default {
 div {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media screen {
+  div#donate {
+    float: left;
+    display: block;
+    width: 33%;
+  }
+}
+@media print {
+  div#header {
+    display: none;
+  }
+  div#donate {
+    display: none;
+  }
 }
 </style>

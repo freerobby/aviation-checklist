@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p><strong>Select CSV</strong></p>
     <button v-on:click="onSelectCSV">Select a CSV</button>
   <input
       type="file"
@@ -28,7 +29,9 @@ export default {
 <style scoped>
 @media screen {
   div {
+    float: left;
     display: block;
+    width: 33%;
   }
 }
 @media print {

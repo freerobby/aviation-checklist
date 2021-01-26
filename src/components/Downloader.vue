@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Download for:</p>
+    <p><strong>Download</strong></p>
     <ul>
       <li v-on:click="$emit('download_dynon')">
         <button>Dynon</button>
@@ -18,7 +18,9 @@ export default {
 <style scoped>
 @media screen {
   div {
+    float: left;
     display: block;
+    width: 33%;
   }
 }
 @media print {
