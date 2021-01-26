@@ -143,6 +143,7 @@ In Flight,Secure,Fuel Selector,Left or Right
 In Flight,Secure,Tie Downs or Chocks,Secure
 In Flight,Secure,Engine Heat,Plug in as Required
 In Flight,Secure,Engine Heat,Verify LED indicator
+In Flight,Secure,Flight Log,Submit Online
 Reference,V Speeds,Vne,160 KIAS
 Reference,V Speeds,Vno,128 KIAS
 Reference,V Speeds,Vg (2150 lbs),62 KIAS
