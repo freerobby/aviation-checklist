@@ -5,7 +5,10 @@
       <li>
         <a href="#" v-on:click="$emit('download_dynon')">Dynon</a>
       </li>
-      <li>Use print dialog to print or save to PDF (3 sections per page).</li>
+      <li>Use print dialog to save to PDF (3 sections per page).</li>
+      <li>
+        Want another format? Let me know at robby@freerobby.com.
+      </li>
     </ul>
   </div>
 </template>
