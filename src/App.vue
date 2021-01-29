@@ -10,10 +10,21 @@
           <li>Drag your CSV file into the box to the right.</li>
         </ol>
         <p><strong>Demo</strong>: <a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/n934gr.csv')">preview</a> what my <a href="/assets/checklists/n934gr.csv">example spreadsheet</a> generates.</p>
-        <downloader
-            v-if="checklistSets.length > 0"
-            v-on:download_dynon="onDownloadDynon">
-        </downloader>
+        <div id="download" v-if="checklistSets.length > 0">
+          <p><strong>Download</strong></p>
+          <ul>
+            <li>
+              <a href="#" v-on:click="onDownloadCSV">CSV</a>
+            </li>
+            <li>
+              <a href="#" v-on:click="onDownloadDynon">Dynon</a>
+            </li>
+            <li>Use print dialog to save to PDF (3 sections per page).</li>
+            <li>
+              Want another format? Let me know at robby@freerobby.com.
+            </li>
+          </ul>
+        </div>
       </div>
 
       <uploader
@@ -22,7 +33,7 @@
       </uploader>
       <div id="editor" v-if="checklistSets.length > 0">
         <p><strong>Edit your checklist</strong></p>
-        <textarea rows="5" cols="60" v-model="user_csv_data">
+        <textarea rows="14" cols="62" v-model="user_csv_data">
         </textarea>
       </div>
       <div id="donate">
@@ -48,7 +59,6 @@
 
 <script>
 import ChecklistSet from "@/components/ChecklistSet";
-import Downloader from "@/components/Downloader";
 import Uploader from "@/components/Uploader";
 
 import papa from "papaparse";
@@ -58,7 +68,6 @@ export default {
   name: 'App',
   components: {
     ChecklistSet,
-    Downloader,
     Uploader
   },
   data() {
@@ -79,6 +88,18 @@ export default {
     },
     loadCSVFromUpload: function(data) {
       this.user_csv_data = data;
+    },
+    initiatePlaintextDownload: function(filename, data) {
+      var link = document.createElement("a");
+      link.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(data));
+      link.setAttribute("download", filename)
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    onDownloadCSV: function() {
+      this.initiatePlaintextDownload("checklist.csv", this.user_csv_data);
     },
     onDownloadDynon: function() {
       var data = this.checklistSets;
@@ -114,14 +135,8 @@ export default {
           num_checklists++;
         }
       }
-
-      var link = document.createElement("a");
-      link.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(lines.join("\n")));
-      link.setAttribute("download", "checklist.txt")
-      link.style.display = "none";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      
+      this.initiatePlaintextDownload("checklist.txt", lines.join("\n"));
     },
     handle_update: function(results) {
       var csv_data = results.data
