@@ -9,7 +9,9 @@
           <li>Export your spreadsheet to CSV format.</li>
           <li>Drag your CSV file into the box to the right.</li>
         </ol>
-        <p><strong>Demo</strong>: <a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/n934gr.csv')">preview</a> what my <a href="/assets/checklists/n934gr.csv">example spreadsheet</a> generates.</p>
+        <div id="demo" v-if="checklistSets.length === 0">
+          <p><strong>Demo</strong>: <a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/n934gr.csv')">preview</a> what my <a href="/assets/checklists/n934gr.csv">example spreadsheet</a> generates.</p>
+        </div>
         <div id="download" v-if="checklistSets.length > 0">
           <p><strong>Download</strong></p>
           <ul>
