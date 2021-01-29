@@ -5,9 +5,9 @@
       <div class="instructions">
         <p><strong>Instructions</strong></p>
         <ol>
-          <li>Create a spreadsheet with four columns: <em>section</em>, <em>checklist</em>, <em>item</em>, <em>action</em>.</li>
-          <li>Export your spreadsheet to CSV format.</li>
-          <li>Drag your CSV file into the box to the right.</li>
+          <li>Create a CSV spreadsheet with four columns.</li>
+          <li>For each checklist item, add a row: <em>section</em>, <em>checklist</em>, <em>item</em>, <em>action</em>.</li>
+          <li>This tool will render your checklist in several common formats.</li>
         </ol>
         <div id="demo" v-if="checklistSets.length === 0">
           <p><strong>Demo</strong>: <a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/n934gr.csv')">preview</a> what my <a href="/assets/checklists/n934gr.csv">example spreadsheet</a> generates.</p>
