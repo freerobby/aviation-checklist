@@ -28,13 +28,22 @@
           </ul>
         </div>
       </div>
-
-      <uploader
-          v-if="checklistSets.length === 0"
-          v-on:csv_imported="loadCSVFromUpload">
-      </uploader>
+      <div id="upload" v-if="checklistSets.length === 0">
+        <p>
+          <strong>Import your own checklist</strong>
+          or
+          <strong>
+            <a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/template.csv')">start making one</a>.
+          </strong>
+        </p>
+        <div class="file_container" v-on:drop.prevent="importFile" v-on:dragover.prevent>
+          <p>Drag your CSV here.</p>
+        </div>
+      </div>
       <div id="editor" v-if="checklistSets.length > 0">
-        <p><strong>Edit your checklist</strong></p>
+        <p><strong>Edit your checklist</strong>
+          or <strong><a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/blank.csv')">start over</a></strong>.
+        </p>
         <textarea rows="14" cols="62" v-model="user_csv_data">
         </textarea>
       </div>
@@ -61,7 +70,6 @@
 
 <script>
 import ChecklistSet from "@/components/ChecklistSet";
-import Uploader from "@/components/Uploader";
 
 import papa from "papaparse";
 
@@ -70,7 +78,6 @@ export default {
   name: 'App',
   components: {
     ChecklistSet,
-    Uploader
   },
   data() {
     return {
@@ -83,16 +90,25 @@ export default {
       this.user_csv_data = localStorage.getItem("csv_data");
   },
   methods: {
+    importFile: function(event) {
+      let csv_file = event.dataTransfer.files[0];
+      var reader = new FileReader();
+      reader.readAsText(csv_file,"UTF-8");
+      reader.onload = readerEvent => {
+        var content = readerEvent.target.result;
+        this.loadCSVFromRaw(content);
+      }
+    },
     loadCSVFromWebURL: function(url) {
       var handle = this;
       var xhr = new XMLHttpRequest();
       xhr.open("GET", url);
       xhr.send(null);
       xhr.onload = function() {
-        handle.user_csv_data = xhr.responseText;
+        handle.loadCSVFromRaw(xhr.responseText)
       }
     },
-    loadCSVFromUpload: function(data) {
+    loadCSVFromRaw: function(data) {
       this.user_csv_data = data;
     },
     initiatePlaintextDownload: function(filename, data) {
@@ -151,7 +167,7 @@ export default {
       var current_checklistset = null;
       var current_checklist = null;
       for (let i = 0; i < csv_data.length; i++) {
-        if (csv_data[i].length < 4) {
+        if (csv_data[i].length < 2 && csv_data[i][0] === "") {
           continue; // Skip partial lines.
         }
         if (csv_data[i][0] !== current_checklistset) {
@@ -200,17 +216,23 @@ div {
     width: 100%;
     margin-bottom: 8px;
   }
-  div#donate, div .instructions, div#editor {
+  div#donate, div .instructions, div#editor, div#upload {
     float: left;
     display: block;
     width: 33%;
+  }
+  div#upload .file_container {
+    width: 90%;
+    height: 200px;
+    border: 2px dotted gray;
+    text-align: center;
   }
 }
 @media print {
   div#header {
     display: none;
   }
-  div#donate, div .instructions, div#editor {
+  div#donate, div .instructions, div#editor, div#upload {
     display: none;
   }
 }
