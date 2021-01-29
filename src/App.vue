@@ -3,14 +3,14 @@
     <div id="header">
       <h1>Aviation Checklist Creator</h1>
       <div class="instructions">
-        <p><strong>Instructions</strong></p>
+        <p><strong>How It Works</strong></p>
         <ol>
           <li>Create a CSV spreadsheet with four columns.</li>
           <li>For each checklist item, add a row: <em>section</em>, <em>checklist</em>, <em>item</em>, <em>action</em>.</li>
           <li>This tool will render your checklist in several common formats.</li>
         </ol>
         <div id="demo" v-if="checklistSets.length === 0">
-          <p><strong>Demo</strong>: <a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/n934gr.csv')">preview</a> what my <a href="/assets/checklists/n934gr.csv">example spreadsheet</a> generates.</p>
+          <p><strong>Want a live demo?</strong> Here's my <a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/n934gr.csv')">my checklist</a>.</p>
         </div>
         <div id="download" v-if="checklistSets.length > 0">
           <p><strong>Download</strong></p>
@@ -28,7 +28,7 @@
           </ul>
         </div>
       </div>
-      <div id="upload" v-if="checklistSets.length === 0">
+      <div id="upload" v-if="user_csv_data.length === 0">
         <p>
           <strong>Import your own checklist</strong>
           or
@@ -40,11 +40,8 @@
           <p>Drag your CSV here.</p>
         </div>
       </div>
-      <div id="editor" v-if="checklistSets.length > 0">
-        <p><strong>Edit your checklist</strong>
-          or <strong><a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/blank.csv')">start over</a></strong>.
-        </p>
-        <textarea rows="14" cols="62" v-model="user_csv_data">
+      <div id="editor" v-if="user_csv_data.length > 0">
+        <textarea rows="14" cols="62" v-model="user_csv_data" style="overflow-y:scroll;">
         </textarea>
       </div>
       <div id="donate">
@@ -223,7 +220,7 @@ div {
   }
   div#upload .file_container {
     width: 90%;
-    height: 200px;
+    height: 160px;
     border: 2px dotted gray;
     text-align: center;
   }
