@@ -9,7 +9,7 @@
           <li>Export your spreadsheet to CSV format.</li>
           <li>Drag your CSV file into the box to the right.</li>
         </ol>
-        <p><strong>Demo</strong>: <a href="#" v-on:click="previewCSV">preview</a> what my <a href="/assets/checklists/n934gr.csv">example spreadsheet</a> generates.</p>
+        <p><strong>Demo</strong>: <a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/n934gr.csv')">preview</a> what my <a href="/assets/checklists/n934gr.csv">example spreadsheet</a> generates.</p>
         <downloader
             v-if="checklistSets.length > 0"
             v-on:download_dynon="onDownloadDynon">
@@ -17,8 +17,14 @@
       </div>
 
       <uploader
-          v-on:csv_loaded="onCSVLoaded">
+          v-if="checklistSets.length === 0"
+          v-on:csv_imported="loadCSVFromUpload">
       </uploader>
+      <div id="editor" v-if="checklistSets.length > 0">
+        <p><strong>Edit your checklist</strong></p>
+        <textarea rows="5" cols="60" v-model="user_csv_data">
+        </textarea>
+      </div>
       <div id="donate">
         <p><strong>Share Your Checklist</strong></p>
         <p>I'd love to add some starter checklists that folks can customize. If you have one you'd like to share with the community, please email it to robby@freerobby.com.</p>
@@ -57,30 +63,22 @@ export default {
   },
   data() {
     return {
-      checklistSets: []
+      checklistSets: [],
+      user_csv_data: ''
     }
   },
   methods: {
-    clearCSV: function() {
-      this.checklistSets = [];
-    },
-    previewCSV: function() {
+    loadCSVFromWebURL: function(url) {
       var handle = this;
-      papa.parse('/assets/checklists/n934gr.csv', {
-        download: true,
-          complete: function(results) {
-          handle.handle_update(results)
-        }
-      });
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", url);
+      xhr.send(null);
+      xhr.onload = function() {
+        handle.user_csv_data = xhr.responseText;
+      }
     },
-    onCSVLoaded: function(data) {
-      var handle = this;
-      papa.parse(data, {
-        download: true,
-        complete: function(results) {
-          handle.handle_update(results)
-        }
-      });
+    loadCSVFromUpload: function(data) {
+      this.user_csv_data = data;
     },
     onDownloadDynon: function() {
       var data = this.checklistSets;
@@ -146,7 +144,17 @@ export default {
 
       this.checklistSets = checklist_sets;
     }
-  }
+  },
+  watch: {
+    user_csv_data: function(newVal) {
+      var handle = this;
+      papa.parse(newVal, {
+        complete: function(results) {
+          handle.handle_update(results)
+        }
+      });
+    }
+  },
 }
 </script>
 
@@ -165,7 +173,7 @@ div {
     width: 100%;
     margin-bottom: 8px;
   }
-  div#donate, div .instructions {
+  div#donate, div .instructions, div#editor {
     float: left;
     display: block;
     width: 33%;
@@ -175,7 +183,7 @@ div {
   div#header {
     display: none;
   }
-  div#donate, div .instructions {
+  div#donate, div .instructions, div#editor {
     display: none;
   }
 }
