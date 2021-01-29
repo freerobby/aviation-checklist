@@ -1,4 +1,4 @@
-Preflight,Cockpit,Mags,Off,Key Out
+Preflight,Cockpit,Mags,"Off, Key Out"
 Preflight,Cockpit,Mixture,Lean to Idle
 Preflight,Cockpit,Throttle,Closed
 Preflight,Cockpit,ARROW,Verify Present
@@ -17,7 +17,7 @@ Preflight,Cockpit,Fuel Selector,Both
 Preflight,Cockpit,Fire Extinguisher,Check
 Preflight,Cockpit,Windows,Close
 Preflight,Nose,Leaks,Check
-Preflight,Nose,Fuel Drain,Check,No Drips
+Preflight,Nose,Fuel Drain,"Check, No Drips"
 Preflight,Nose,Oil,Verify 5-6L
 Preflight,Nose,Engine Heat,"Verify LED, Unplug"
 Preflight,Nose,Prop & Spinner,Check
