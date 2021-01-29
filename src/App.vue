@@ -76,6 +76,10 @@ export default {
       user_csv_data: ''
     }
   },
+  beforeMount() {
+    if (localStorage.getItem("csv_data") !== null)
+      this.user_csv_data = localStorage.getItem("csv_data");
+  },
   methods: {
     loadCSVFromWebURL: function(url) {
       var handle = this;
@@ -162,6 +166,9 @@ export default {
   },
   watch: {
     user_csv_data: function(newVal) {
+      if (newVal !== "") {
+        localStorage.setItem("csv_data", newVal);
+      }
       var handle = this;
       papa.parse(newVal, {
         complete: function(results) {
