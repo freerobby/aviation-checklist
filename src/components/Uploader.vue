@@ -1,6 +1,15 @@
 <template>
   <div id="upload">
-    <p><strong>Import your own checklist</strong></p>
+    <p>
+      <strong>Import your own checklist</strong>
+      or
+      <strong>
+        <a href="#" v-on:click="$emit(
+            'csv_imported',
+            'First Section, First Checklist, First Item, First Action\nFirst Section, First Checklist, Second Item, Second action'
+            )">start making one</a>.
+      </strong>
+    </p>
     <div class="file_container"
          v-on:drop.prevent="importFile"
          v-on:dragover.prevent
