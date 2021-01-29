@@ -1,6 +1,6 @@
 <template>
   <div id="upload">
-    <p><strong>Build your own checklist</strong></p>
+    <p><strong>Import your own checklist</strong></p>
     <div class="file_container"
          v-on:drop.prevent="replaceFile"
          v-on:dragover.prevent

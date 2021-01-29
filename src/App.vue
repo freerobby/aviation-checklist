@@ -21,9 +21,9 @@
       </uploader>
       <div id="donate">
         <p><strong>Share Your Checklist</strong></p>
-        <p>I'd love to add some starter checklists that folks can customize. If you have one you'd like to share, please email the CSV to robby@freerobby.com.</p>
-        <p><strong>Sponsor</strong></p>
-        <p>If you'd like to sponsor a custom export format, shoot me an email. I plan to keep this service free, but if you use it commercially, please consider donating.</p>
+        <p>I'd love to add some starter checklists that folks can customize. If you have one you'd like to share with the community, please email it to robby@freerobby.com.</p>
+        <p><strong>Donate</strong></p>
+        <p>This service is free, but if you use it commercially, please consider donating.</p>
         <ul>
           <li>Bitcoin: bc1ql92yyypywyy4ajgcs2ha69yx2zyhg22ej96mx5</li>
           <li>Venmo: @freerobby</li>
