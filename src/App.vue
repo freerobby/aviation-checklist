@@ -63,20 +63,22 @@
         v-bind:checklists="checklistSet.checklists"
         v-bind:key="checklistSet.id"
     ></checklist-set>
-    <div id="contact">
-      <p><strong>Contact</strong></p>
-      <p>Is there a format you'd like to see supported?<br />
-        Have a checklist you're willing to share with the community?<br />
-        Drop me a line at robby@freerobby.com.</p>
-    </div>
-    <div id="donate">
-      <p><strong>Donate</strong></p>
-      <p>This service is free, but if you use it commercially, please consider donating to support its continued development.</p>
-      <ul>
-        <li>Bitcoin: bc1ql92yyypywyy4ajgcs2ha69yx2zyhg22ej96mx5</li>
-        <li>Venmo: @freerobby</li>
-        <li><a href="https://www.paypal.com/donate?hosted_button_id=TBK867SUY8FLU">Paypal</a></li>
-      </ul>
+    <div id="footer">
+      <div id="contact">
+        <p><strong>Contact</strong></p>
+        <p>Is there a format you'd like to see supported?<br />
+          Have a checklist you're willing to share with the community?<br />
+          Drop me a line at robby@freerobby.com.</p>
+      </div>
+      <div id="donate">
+        <p><strong>Donate</strong></p>
+        <p>This service is free, but if you use it commercially, please consider donating to support its continued development.</p>
+        <ul>
+          <li>Bitcoin: bc1ql92yyypywyy4ajgcs2ha69yx2zyhg22ej96mx5</li>
+          <li>Venmo: @freerobby</li>
+          <li><a href="https://www.paypal.com/donate?hosted_button_id=TBK867SUY8FLU">Paypal</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -296,6 +298,11 @@ div {
     display: block;
     width: 50%;
   }
+  div#footer {
+    float: left;
+    display: block;
+    width: 100%;
+  }
   div#right-pane, div .instructions, div#editor, div#upload {
     float: left;
     display: block;
@@ -309,7 +316,7 @@ div {
   }
 }
 @media print {
-  div#header {
+  div#header, div#footer {
     display: none;
   }
   div#contact, div#donate, div#right-pane, div .instructions, div#editor, div#upload {
