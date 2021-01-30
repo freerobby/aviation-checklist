@@ -19,6 +19,9 @@
               <a href="#" v-on:click="onDownloadCSV">CSV</a>
             </li>
             <li>
+              <a href="#" v-on:click="onDownloadMarkdown">Markdown</a>
+            </li>
+            <li>
               <a href="#" v-on:click="onDownloadDynon">Dynon</a>
             </li>
             <li>Use print dialog to save to PDF (3 sections per page).</li>
@@ -154,8 +157,31 @@ export default {
           num_checklists++;
         }
       }
-      
+
       this.initiatePlaintextDownload("checklist.txt", lines.join("\n"));
+    },
+    onDownloadMarkdown: function() {
+      var data = this.checklistSets;
+      var lines = [];
+      for (var set = 0; set < data.length; set++) {
+        lines.push("# " + data[set].title);
+        lines.push("");
+        for (var checklist = 0; checklist < data[set].checklists.length; checklist++) {
+          lines.push("## " + data[set].checklists[checklist].title);
+          lines.push("");
+          for (var i = 0; i < data[set].checklists[checklist].items.length; i++) {
+            if (data[set].checklists[checklist].items[i].operation !== undefined) {
+              lines.push("* " + data[set].checklists[checklist].items[i].subject + ": " + data[set].checklists[checklist].items[i].operation);
+            }
+            else {
+              lines.push("* " + data[set].checklists[checklist].items[i].subject);
+            }
+          }
+          lines.push("");
+        }
+      }
+      
+      this.initiatePlaintextDownload("checklist.md", lines.join("\n"));
     },
     handle_update: function(results) {
       var csv_data = results.data
