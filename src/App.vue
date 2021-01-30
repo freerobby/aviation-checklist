@@ -71,7 +71,7 @@
     </div>
     <div id="donate">
       <p><strong>Donate</strong></p>
-      <p>This service is free, but if you use it commercially, please consider donating.</p>
+      <p>This service is free, but if you use it commercially, please consider donating to support its continued development.</p>
       <ul>
         <li>Bitcoin: bc1ql92yyypywyy4ajgcs2ha69yx2zyhg22ej96mx5</li>
         <li>Venmo: @freerobby</li>
