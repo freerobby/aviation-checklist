@@ -3,23 +3,48 @@
     <div id="header">
       <h1>Aviation Checklist Creator</h1>
       <div class="instructions">
-        <p><strong>How It Works</strong></p>
         <ol>
-          <li>Create a CSV spreadsheet with four columns.</li>
-          <li>For each checklist item, add a row: <em>section</em>, <em>checklist</em>, <em>item</em>, <em>action</em>.</li>
-          <li>This tool will render your checklist in several common formats.</li>
+          <li>
+            Write your checklist in the following format:
+            <pre>
+# Name of Section
+
+## Name of Checklist 1
+
+* Item 1: Action to Perform
+* Item 2: Action to Perform
+
+## Name of Checklist 2
+
+* Item 1: Action to Perform
+* Item 2: Action to Perform
+            </pre>
+          </li>
+          <li>This tool will render your checklist to CSV, Dynon, and PDF.</li>
         </ol>
-        <div id="demo" v-if="checklistSets.length === 0">
-          <p><strong>Want a live demo?</strong> Here's my <a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/n934gr.csv')">my checklist</a>.</p>
+      </div>
+      <div id="editor">
+        <div v-if="checklistSets.length === 0">
+        <p>
+          Want a demo? Use
+          <strong><a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/n934gr.md')">my checklist</a></strong>, make changes, and watch them update.
+        </p>
         </div>
-        <div id="download" v-if="checklistSets.length > 0">
+        <textarea rows="16" cols="62" v-model="user_raw_data" style="overflow-y:scroll;">
+        </textarea>
+      </div>
+      <div id="right-pane">
+        <div class="file_container" v-on:drop.prevent="importFile" v-on:dragover.prevent>
+          <p>Have your own file? Drag it here to import it.</p>
+        </div>
+        <div v-if="checklistSets.length > 0">
           <p><strong>Download</strong></p>
           <ul>
             <li>
-              <a href="#" v-on:click="onDownloadCSV">CSV</a>
+              <a href="#" v-on:click="onDownloadMarkdown">Original</a> (for re-importing later)
             </li>
             <li>
-              <a href="#" v-on:click="onDownloadMarkdown">Markdown</a>
+              <a href="#" v-on:click="onDownloadCSV">CSV</a>
             </li>
             <li>
               <a href="#" v-on:click="onDownloadDynon">Dynon</a>
@@ -31,33 +56,6 @@
           </ul>
         </div>
       </div>
-      <div id="upload" v-if="user_csv_data.length === 0">
-        <p>
-          <strong>Import your own checklist</strong>
-          or
-          <strong>
-            <a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/template.csv')">start making one</a>.
-          </strong>
-        </p>
-        <div class="file_container" v-on:drop.prevent="importFile" v-on:dragover.prevent>
-          <p>Drag your CSV here.</p>
-        </div>
-      </div>
-      <div id="editor" v-if="user_csv_data.length > 0">
-        <textarea rows="14" cols="62" v-model="user_csv_data" style="overflow-y:scroll;">
-        </textarea>
-      </div>
-      <div id="donate">
-        <p><strong>Share Your Checklist</strong></p>
-        <p>I'd love to add some starter checklists that folks can customize. If you have one you'd like to share with the community, please email it to robby@freerobby.com.</p>
-        <p><strong>Donate</strong></p>
-        <p>This service is free, but if you use it commercially, please consider donating.</p>
-        <ul>
-          <li>Bitcoin: bc1ql92yyypywyy4ajgcs2ha69yx2zyhg22ej96mx5</li>
-          <li>Venmo: @freerobby</li>
-          <li><a href="https://www.paypal.com/donate?hosted_button_id=TBK867SUY8FLU">Paypal</a></li>
-        </ul>
-      </div>
     </div>
     <checklist-set
         v-for="checklistSet in checklistSets"
@@ -65,6 +63,21 @@
         v-bind:checklists="checklistSet.checklists"
         v-bind:key="checklistSet.id"
     ></checklist-set>
+    <div id="contact">
+      <p><strong>Contact</strong></p>
+      <p>Is there a format you'd like to see supported?<br />
+        Have a checklist you're willing to share with the community?<br />
+        Drop me a line at robby@freerobby.com.</p>
+    </div>
+    <div id="donate">
+      <p><strong>Donate</strong></p>
+      <p>This service is free, but if you use it commercially, please consider donating.</p>
+      <ul>
+        <li>Bitcoin: bc1ql92yyypywyy4ajgcs2ha69yx2zyhg22ej96mx5</li>
+        <li>Venmo: @freerobby</li>
+        <li><a href="https://www.paypal.com/donate?hosted_button_id=TBK867SUY8FLU">Paypal</a></li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -82,12 +95,12 @@ export default {
   data() {
     return {
       checklistSets: [],
-      user_csv_data: ''
+      user_raw_data: ''
     }
   },
   beforeMount() {
-    if (localStorage.getItem("csv_data") !== null)
-      this.user_csv_data = localStorage.getItem("csv_data");
+    if (localStorage.getItem("user_raw_data") !== null)
+      this.user_raw_data = localStorage.getItem("user_raw_data");
   },
   methods: {
     importFile: function(event) {
@@ -109,7 +122,7 @@ export default {
       }
     },
     loadCSVFromRaw: function(data) {
-      this.user_csv_data = data;
+      this.user_raw_data = data;
     },
     initiatePlaintextDownload: function(filename, data) {
       var link = document.createElement("a");
@@ -121,7 +134,7 @@ export default {
       document.body.removeChild(link);
     },
     onDownloadCSV: function() {
-      this.initiatePlaintextDownload("checklist.csv", this.user_csv_data);
+      this.initiatePlaintextDownload("checklist.csv", this.user_raw_data);
     },
     onDownloadDynon: function() {
       var data = this.checklistSets;
@@ -183,7 +196,7 @@ export default {
       
       this.initiatePlaintextDownload("checklist.md", lines.join("\n"));
     },
-    handle_update: function(results) {
+    handle_update_csv: function(results) {
       var csv_data = results.data
       var checklist_sets = [];
 
@@ -206,19 +219,58 @@ export default {
       }
 
       this.checklistSets = checklist_sets;
+    },
+    parse: function(raw) {
+      if (raw.substring(0, 1) === "#")
+        this.parse_md(raw);
+      else
+        this.parse_csv(raw);
+    },
+    parse_csv: function(raw) {
+      var handle = this;
+      papa.parse(raw, {
+        complete: function(results) {
+          handle.handle_update_csv(results)
+        }
+      });
+    },
+    parse_md: function(raw) {
+      var md_data = raw.split("\n");
+      var checklist_sets = [];
+
+      while (md_data.length > 0) {
+        var row = md_data.shift();
+        if (row.substring(0,2) === "# ") {
+          checklist_sets.push({title: row.substring(2), checklists: []});
+        }
+        else if (row.substring(0,3) === "## ") {
+          checklist_sets.slice(-1)[0]['checklists'].push({title: row.substring(3), items: []})
+        }
+        else if (row.substring(0, 2) === "* ") {
+          var index = row.indexOf(":");
+          if (index >= 0) {
+            checklist_sets.slice(-1)[0]['checklists'].slice(-1)[0].items.push({
+              subject: row.substring(2, index),
+              operation: row.substring(index + 1)
+            });
+          }
+          else {
+            checklist_sets.slice(-1)[0]['checklists'].slice(-1)[0].items.push({
+              subject: row.substring(2)
+            })
+          }
+        }
+      }
+
+      this.checklistSets = checklist_sets;
     }
   },
   watch: {
-    user_csv_data: function(newVal) {
+    user_raw_data: function(newVal) {
       if (newVal !== "") {
-        localStorage.setItem("csv_data", newVal);
+        localStorage.setItem("user_raw_data", newVal);
       }
-      var handle = this;
-      papa.parse(newVal, {
-        complete: function(results) {
-          handle.handle_update(results)
-        }
-      });
+      this.parse(newVal);
     }
   },
 }
@@ -239,14 +291,19 @@ div {
     width: 100%;
     margin-bottom: 8px;
   }
-  div#donate, div .instructions, div#editor, div#upload {
+  div#contact, div#donate {
+    float: left;
+    display: block;
+    width: 50%;
+  }
+  div#right-pane, div .instructions, div#editor, div#upload {
     float: left;
     display: block;
     width: 33%;
   }
-  div#upload .file_container {
+  div#right-pane .file_container {
     width: 90%;
-    height: 160px;
+    height: 50px;
     border: 2px dotted gray;
     text-align: center;
   }
@@ -255,7 +312,7 @@ div {
   div#header {
     display: none;
   }
-  div#donate, div .instructions, div#editor, div#upload {
+  div#contact, div#donate, div#right-pane, div .instructions, div#editor, div#upload {
     display: none;
   }
 }
