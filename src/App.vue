@@ -249,11 +249,11 @@ export default {
           checklist_sets.slice(-1)[0]['checklists'].push({title: row.substring(3), items: []})
         }
         else if (row.substring(0, 2) === "* ") {
-          var index = row.indexOf(":");
+          var index = row.indexOf(": ");
           if (index >= 0) {
             checklist_sets.slice(-1)[0]['checklists'].slice(-1)[0].items.push({
               subject: row.substring(2, index),
-              operation: row.substring(index + 1)
+              operation: row.substring(index + 2)
             });
           }
           else {
