@@ -6,6 +6,8 @@
       {{title}}
     </h1>
     <checklist v-for="checklist in checklists" v-bind:title="checklist.title" v-bind:items="checklist.items" v-bind:key="checklist.id"></checklist>
+
+    <div v-if="generated!==''" class="generated">{{ generated }}</div>
   </div>
 </template>
 
@@ -14,7 +16,7 @@ import Checklist from "./Checklist.vue"
 export default {
   name: "ChecklistSet",
   components: {Checklist},
-  props: ["title", "checklists"]
+  props: ["title", "checklists", "generated"]
 }
 </script>
 
@@ -23,6 +25,7 @@ div {
   width: auto;
   overflow: hidden;
   background-color: #f5e7d3;
+  position: relative;
 }
 div.checklist-set{
   border: 1px solid #000;
@@ -43,5 +46,12 @@ div.checklist-set h1.emergency {
 }
 div.checklist-set h1.reference {
   background-color: #4588ff;
+}
+div.checklist-set .generated {
+  color: #515151;
+  font-size: 8pt;
+  position: absolute;
+  bottom: 2px;
+  right: 3px;
 }
 </style>

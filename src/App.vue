@@ -58,10 +58,11 @@
       </div>
     </div>
     <checklist-set
-        v-for="checklistSet in checklistSets"
+        v-for="(checklistSet, index) in checklistSets"
         v-bind:title="checklistSet.title"
         v-bind:checklists="checklistSet.checklists"
         v-bind:key="checklistSet.id"
+        v-bind:generated="(index === 0)?'Printed ' + formatted_date():''"
     ></checklist-set>
   </div>
 </template>
@@ -88,6 +89,10 @@ export default {
       this.user_raw_data = localStorage.getItem("user_raw_data");
   },
   methods: {
+    formatted_date: function() {
+      var d = new Date();
+      return d.toDateString()
+    },
     importFile: function(event) {
       let csv_file = event.dataTransfer.files[0];
       var reader = new FileReader();
