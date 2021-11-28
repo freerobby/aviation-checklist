@@ -49,6 +49,9 @@
             <li>
               <a href="#" v-on:click="onDownloadDynon">Dynon</a>
             </li>
+            <li>
+              <a href="#" v-on:click="onDownloadFlightDeckEFB">FlightDeck EFB</a>
+            </li>
             <li>Use print dialog to save to PDF (3 sections per page).</li>
             <li>
               Want another format? Let me know at robby@freerobby.com.
@@ -162,6 +165,33 @@ export default {
       }
 
       this.initiatePlaintextDownload("checklist.txt", lines.join("\n"));
+    },
+    onDownloadFlightDeckEFB: function() {
+      var export_data = {};
+      export_data["name"] = "Aviation Checklist Export";
+      export_data["checklistSections"] = [];
+
+      var data = this.checklistSets;
+      for (var set = 0; set < data.length; set++) {
+        for (var checklist = 0; checklist < data[set].checklists.length; checklist++) {
+          var this_export_checklist = {};
+          this_export_checklist["name"] = data[set].title + ": " + data[set].checklists[checklist].title;
+          this_export_checklist["isAbnormalProcedure"] = data[set].title === "Reference";
+          this_export_checklist["isEmergencyProcedure"] = data[set].title === "Emergency";
+
+          this_export_checklist["checklistItems"] = [];
+          for (var i = 0; i < data[set].checklists[checklist].items.length; i++) {
+            this_export_checklist["checklistItems"].push({
+              "name": data[set].checklists[checklist].items[i].subject + " - " + data[set].checklists[checklist].items[i].operation,
+              "completed": false
+            });
+          }
+
+          export_data["checklistSections"].push(this_export_checklist);
+        }
+      }
+
+      this.initiatePlaintextDownload("checklist.fdcl", JSON.stringify(export_data));
     },
     onDownloadMarkdown: function() {
       var data = this.checklistSets;
