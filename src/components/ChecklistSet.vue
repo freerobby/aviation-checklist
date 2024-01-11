@@ -33,7 +33,7 @@ div.checklist-set{
   #width: 198pt;
   width: 20em;
   #height: 756pt;
-  #height: 60em;
+  height: 50em;
   font-size: 11pt;
 }
 div.checklist-set h1 {
