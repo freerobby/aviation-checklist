@@ -29,7 +29,11 @@ div h2 {
   display: block;
   width: 100%;
   margin: 0;
-  text-align: left;
+  text-align: center;
+  background-color: #666;
+  color: #ddd;
+  text-transform: uppercase;
+  font-size: 120%;
 }
 ul {
   margin: 0;

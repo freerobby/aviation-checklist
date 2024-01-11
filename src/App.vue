@@ -300,6 +300,7 @@ export default {
 div {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: Verdana, sans-serif;
 }
 
 @media screen {

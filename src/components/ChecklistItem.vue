@@ -4,7 +4,7 @@
     <div class="checklist-item">
       {{ item.subject }}
       <span class="dots"></span>
-      {{ item.operation }}
+      <span class="operation">{{ item.operation }}</span>
     </div>
   </li>
 </template>
@@ -21,6 +21,10 @@ div.checklist-item {
   display: flex;
   align-items: center;
   clear: both;
+}
+
+span.operation {
+  text-transform: uppercase;
 }
 
 span.dots {
