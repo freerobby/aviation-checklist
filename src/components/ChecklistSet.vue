@@ -31,10 +31,12 @@ div.checklist-set{
   border: 1px solid #000;
   float: left;
   #width: 198pt;
-  width: 20em;
+  width: 100%;
   #height: 756pt;
-  height: 50em;
-  font-size: 11pt;
+  #height: 50em;
+  font-size: 100%;
+  break-inside: avoid-column;
+
 }
 div.checklist-set h1 {
   margin: 0;
@@ -43,7 +45,7 @@ div.checklist-set h1 {
   background-color: #ecb100;
   text-align: center;
   color: #fff;
-  font-size: 150%;
+  font-size: 120%;
   text-transform: uppercase;
 }
 div.checklist-set h1.emergency {
@@ -55,7 +57,8 @@ div.checklist-set h1.reference {
 div.checklist-set .generated {
   color: #515151;
   #font-size: 8pt;
-  position: absolute;
+  #position: absolute;
+  text-align: right;
   bottom: 2px;
   right: 3px;
 }

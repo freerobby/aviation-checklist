@@ -21,8 +21,9 @@ export default {
 div.checklist {
   overflow: hidden;
   margin-bottom: 12px;
-  padding-left: 4px;
-  padding-right: 4px;
+  break-inside: avoid;
+  #padding-left: 4px;
+  #padding-right: 4px;
 }
 div h2 {
   float: left;
@@ -43,5 +44,6 @@ ul {
 ul li {
   list-style-type:none;
   width: 100%;
+  padding-left: 0.5rem;
 }
 </style>

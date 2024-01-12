@@ -21,10 +21,12 @@ div.checklist-item {
   display: flex;
   align-items: center;
   clear: both;
+  #line-height: 0.7em;
 }
 
 span.operation {
   text-transform: uppercase;
+  padding-right: 1rem;
 }
 
 span.dots {
