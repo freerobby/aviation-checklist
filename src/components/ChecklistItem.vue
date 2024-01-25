@@ -1,10 +1,10 @@
+
 <template>
   <li>
-    <div class="subject">
+    <div class="checklist-item">
       {{ item.subject }}
-    </div>
-    <div class="operation">
-      {{ item.operation}}
+      <span class="dots"></span>
+      {{ item.operation }}
     </div>
   </li>
 </template>
@@ -17,13 +17,23 @@ export default {
 </script>
 
 <style scoped>
-div.subject {
-  float: left;
-  height: auto;
-  display: block;
+div.checklist-item {
+  display: flex;
+  align-items: center;
   clear: both;
 }
-div.operation {
-  float: right;
+
+span.dots {
+  flex: 1; /* Distribute available space equally */
+  text-align: center;
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide overflowing dots */
+}
+
+span.dots::before {
+  content: "..........................................................................................................."; /* Add as many dots as needed */
+  letter-spacing: 2px; /* Adjust the spacing between dots */
+  color: #000; /* Set the color to match your design */
 }
 </style>
+
