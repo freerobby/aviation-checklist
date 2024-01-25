@@ -11,6 +11,6 @@ git init
 git add -A
 git commit -m 'deploy'
 
-git push -f git@github.com:freerobby/aviation-checklist.git master:gh-pages
+git push -f git@github.com:freerobby/aviation-checklist.git main:gh-pages
 
 cd -
