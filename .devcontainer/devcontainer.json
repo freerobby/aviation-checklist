@@ -1,0 +1,36 @@
+{
+  "name": "aviation-checklist",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+
+  // Forward the Vue CLI dev server
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "Vue Dev Server",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  // Recommended VSCode extensions for Vue development
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Vue.volar",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "EditorTeam.editorconfig"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      }
+    }
+  },
+
+  // Start the dev server when the container opens
+  "postStartCommand": "yarn serve -- --host 0.0.0.0",
+
+  "remoteUser": "node"
+}

@@ -60,13 +60,15 @@
         </div>
       </div>
     </div>
-    <checklist-set
-        v-for="(checklistSet, index) in checklistSets"
-        v-bind:title="checklistSet.title"
-        v-bind:checklists="checklistSet.checklists"
-        v-bind:key="checklistSet.id"
-        v-bind:generated="(index === 0)?'Printed ' + formatted_date():''"
-    ></checklist-set>
+    <div class="threecol">
+      <checklist-set
+          v-for="(checklistSet, index) in checklistSets"
+          v-bind:title="checklistSet.title"
+          v-bind:checklists="checklistSet.checklists"
+          v-bind:key="checklistSet.id"
+          v-bind:generated="(index === 0)?'Printed ' + formatted_date():''"
+      ></checklist-set>
+    </div>
   </div>
 </template>
 
@@ -297,9 +299,22 @@ export default {
 </script>
 
 <style>
+
 div {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: Verdana, sans-serif;
+}
+
+div.threecol {
+  #font-style: italic;
+  clear: both;
+  column-count: 3;
+
+  #column-gap: 0.5rem;
+  #column-fill: balance;
+  #column-width: 20rem;
+  #width: 800px;
 }
 
 @media screen {
@@ -322,6 +337,9 @@ div {
     border: 2px dotted gray;
     text-align: center;
   }
+  div.threecol {
+    font-size: 90%;
+  }
 }
 @media print {
   div#header {
@@ -329,6 +347,9 @@ div {
   }
   div#right-pane, div .instructions, div#editor, div#upload {
     display: none;
+  }
+  div.threecol {
+    font-size: 70%;
   }
 }
 </style>

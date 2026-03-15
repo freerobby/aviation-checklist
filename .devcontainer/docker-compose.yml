@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .. # project root (one level above .devcontainer/)
+      dockerfile: Dockerfile
+    volumes:
+      # Mount your local source into the container so edits are reflected instantly
+      - ..:/workspace:cached
+      # Keep node_modules inside the container — don't overlay with host copy
+      - node_modules:/workspace/node_modules
+    ports:
+      - "8080:8080"
+    environment:
+      # Needed for Webpack/Vue CLI hot-reload inside Docker
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - NODE_OPTIONS=--openssl-legacy-provider
+      - COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+    # Override the Dockerfile CMD so the container stays alive for VSCode to attach;
+    # postStartCommand in devcontainer.json launches the dev server.
+    command: sleep infinity
+
+volumes:
+  node_modules:
