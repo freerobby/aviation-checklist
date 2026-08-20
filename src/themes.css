@@ -1,0 +1,105 @@
+:root {
+  --page-bg: #ffffff;
+  --page-text: #000000;
+  --card-bg: #f5e7d3;
+  --card-text: #000000;
+  --card-border: #000000;
+  --card-border-width: 1px;
+  --header-bg: #ecb100;
+  --header-text: #ffffff;
+  --emergency-header-bg: #ff371a;
+  --reference-header-bg: #4588ff;
+  --generated-text: #515151;
+  --dots-color: #000000;
+  --input-bg: #ffffff;
+  --input-text: #000000;
+  --input-border: #767676;
+  --dropzone-border: gray;
+  --link-color: #0000ee;
+}
+
+html[data-theme="light"] {
+  --page-bg: #ffffff;
+  --page-text: #000000;
+  --card-bg: #ffffff;
+  --card-text: #000000;
+  --card-border: #000000;
+  --card-border-width: 1px;
+  --header-bg: #000000;
+  --header-text: #ffffff;
+  --emergency-header-bg: #b00000;
+  --reference-header-bg: #003399;
+  --generated-text: #333333;
+  --dots-color: #000000;
+  --input-bg: #ffffff;
+  --input-text: #000000;
+  --input-border: #000000;
+  --dropzone-border: #000000;
+  --link-color: #0000ee;
+}
+
+html[data-theme="dark"] {
+  --page-bg: #121212;
+  --page-text: #f5f5f5;
+  --card-bg: #000000;
+  --card-text: #ffffff;
+  --card-border: #ffffff;
+  --card-border-width: 1px;
+  --header-bg: #2a2a2a;
+  --header-text: #ffffff;
+  --emergency-header-bg: #8b1515;
+  --reference-header-bg: #1a4a8a;
+  --generated-text: #c8c8c8;
+  --dots-color: #ffffff;
+  --input-bg: #1e1e1e;
+  --input-text: #ffffff;
+  --input-border: #888888;
+  --dropzone-border: #888888;
+  --link-color: #8ab4f8;
+}
+
+html[data-theme="night"] {
+  --page-bg: #0a0a0a;
+  --page-text: #ffb000;
+  --card-bg: #000000;
+  --card-text: #ffb000;
+  --card-border: #ffb000;
+  --card-border-width: 1px;
+  --header-bg: #3d2a00;
+  --header-text: #ffb000;
+  --emergency-header-bg: #5c0000;
+  --reference-header-bg: #001a33;
+  --generated-text: #c48a00;
+  --dots-color: #ffb000;
+  --input-bg: #141414;
+  --input-text: #ffb000;
+  --input-border: #ffb000;
+  --dropzone-border: #ffb000;
+  --link-color: #ffcc55;
+}
+
+html[data-theme="high-contrast"] {
+  --page-bg: #ffffff;
+  --page-text: #000000;
+  --card-bg: #ffffff;
+  --card-text: #000000;
+  --card-border: #000000;
+  --card-border-width: 3px;
+  --header-bg: #000000;
+  --header-text: #ffffff;
+  --emergency-header-bg: #ff0000;
+  --reference-header-bg: #0000ff;
+  --generated-text: #000000;
+  --dots-color: #000000;
+  --input-bg: #ffffff;
+  --input-text: #000000;
+  --input-border: #000000;
+  --dropzone-border: #000000;
+  --link-color: #000000;
+}
+
+html,
+body {
+  background-color: var(--page-bg);
+  color: var(--page-text);
+}
