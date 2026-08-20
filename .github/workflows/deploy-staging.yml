@@ -1,0 +1,38 @@
+name: Deploy staging
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install
+        run: yarn install --frozen-lockfile --ignore-engines
+
+      - name: Build staging
+        run: yarn build --ignore-engines
+        env:
+          PUBLIC_PATH: /staging/
+          VUE_APP_STAGING: "true"
+
+      - name: Publish /staging on GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages
+          target-folder: staging
+          clean: true
+          commit-message: Deploy staging preview

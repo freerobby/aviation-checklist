@@ -24,11 +24,12 @@ export default {
 div {
   width: auto;
   overflow: hidden;
-  background-color: #f5e7d3;
+  background-color: var(--card-bg);
+  color: var(--card-text);
   position: relative;
 }
 div.checklist-set{
-  border: 1px solid #000;
+  border: var(--card-border-width, 1px) solid var(--card-border);
   float: left;
   width: 198pt;
   height: 756pt;
@@ -37,18 +38,18 @@ div.checklist-set h1 {
   margin: 0;
   padding-top: 2px;
   padding-bottom: 2px;
-  background-color: #ecb100;
+  background-color: var(--header-bg);
   text-align: center;
-  color: #fff;
+  color: var(--header-text);
 }
 div.checklist-set h1.emergency {
-  background-color: #ff371a;
+  background-color: var(--emergency-header-bg);
 }
 div.checklist-set h1.reference {
-  background-color: #4588ff;
+  background-color: var(--reference-header-bg);
 }
 div.checklist-set .generated {
-  color: #515151;
+  color: var(--generated-text);
   font-size: 8pt;
   position: absolute;
   bottom: 2px;

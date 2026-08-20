@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div v-if="isStaging" class="staging-banner">
+      Staging preview — production is unchanged
+    </div>
     <div id="header">
       <h1>Aviation Checklist Creator</h1>
       <div class="instructions">
@@ -20,14 +23,14 @@
 * Item 2: Action to Perform
             </pre>
           </li>
-          <li>This tool will render your checklist to CSV, Dynon, and PDF.</li>
+          <li>This tool will render your checklist to CSV, Dynon, PNG, and PDF.</li>
         </ol>
       </div>
       <div id="editor">
         <div v-if="checklistSets.length === 0">
         <p>
           Want a demo? Use
-          <strong><a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/n934gr.md')">my checklist</a></strong>, make changes, and watch them update.
+          <strong><a href="#" v-on:click="loadCSVFromWebURL(demoChecklistUrl)">my checklist</a></strong>, make changes, and watch them update.
         </p>
         </div>
         <textarea rows="16" cols="62" v-model="user_raw_data" style="overflow-y:scroll;">
@@ -36,6 +39,14 @@
       <div id="right-pane">
         <div class="file_container" v-on:drop.prevent="importFile" v-on:dragover.prevent>
           <p>Have your own file? Drag it here to import it.</p>
+        </div>
+        <div class="theme-picker">
+          <p><strong>Theme</strong></p>
+          <select v-model="theme" aria-label="Checklist theme">
+            <option v-for="t in themes" v-bind:key="t.id" v-bind:value="t.id">
+              {{ t.name }} — {{ t.description }}
+            </option>
+          </select>
         </div>
         <div v-if="checklistSets.length > 0">
           <p><strong>Download</strong></p>
@@ -52,6 +63,10 @@
             <li>
               <a href="#" v-on:click="onDownloadFlightDeckEFB">FlightDeck EFB</a>
             </li>
+            <li>
+              <a href="#" v-on:click="onDownloadPNG">{{ exportingPng ? 'Preparing PNG…' : 'PNG' }}</a>
+              (each section, plus one image of the full checklist)
+            </li>
             <li>Use print dialog to save to PDF (3 sections per page).</li>
             <li>
               Want another format? Let me know at robby@freerobby.com.
@@ -60,18 +75,22 @@
         </div>
       </div>
     </div>
-    <checklist-set
-        v-for="(checklistSet, index) in checklistSets"
-        v-bind:title="checklistSet.title"
-        v-bind:checklists="checklistSet.checklists"
-        v-bind:key="checklistSet.id"
-        v-bind:generated="(index === 0)?'Printed ' + formatted_date():''"
-    ></checklist-set>
+    <div id="checklist-preview" ref="checklistPreview">
+      <checklist-set
+          v-for="(checklistSet, index) in checklistSets"
+          v-bind:title="checklistSet.title"
+          v-bind:checklists="checklistSet.checklists"
+          v-bind:key="checklistSet.id"
+          v-bind:generated="(index === 0)?'Printed ' + formatted_date():''"
+      ></checklist-set>
+    </div>
   </div>
 </template>
 
 <script>
 import ChecklistSet from "@/components/ChecklistSet";
+import { THEMES, DEFAULT_THEME, isValidTheme } from "@/themes";
+import { downloadChecklistPngs } from "@/exportPng";
 
 import papa from "papaparse";
 
@@ -84,8 +103,20 @@ export default {
   data() {
     return {
       checklistSets: [],
-      user_raw_data: ''
+      user_raw_data: '',
+      theme: DEFAULT_THEME,
+      themes: THEMES,
+      exportingPng: false,
+      isStaging: process.env.VUE_APP_STAGING === 'true',
+      demoChecklistUrl: process.env.BASE_URL + 'assets/checklists/n934gr.md'
     }
+  },
+  created() {
+    var savedTheme = localStorage.getItem("theme");
+    if (isValidTheme(savedTheme)) {
+      this.theme = savedTheme;
+    }
+    document.documentElement.setAttribute("data-theme", this.theme);
   },
   beforeMount() {
     if (localStorage.getItem("user_raw_data") !== null)
@@ -193,6 +224,40 @@ export default {
 
       this.initiatePlaintextDownload("checklist.fdcl", JSON.stringify(export_data));
     },
+    onDownloadPNG: function(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      if (this.exportingPng || this.checklistSets.length === 0) {
+        return;
+      }
+
+      var cards = [];
+      var preview = this.$refs.checklistPreview;
+      if (preview) {
+        var cardEls = preview.querySelectorAll(".checklist-set");
+        for (var i = 0; i < cardEls.length; i++) {
+          cards.push({
+            title: this.checklistSets[i] ? this.checklistSets[i].title : ("section-" + (i + 1)),
+            element: cardEls[i]
+          });
+        }
+      }
+
+      if (cards.length === 0) {
+        return;
+      }
+
+      this.exportingPng = true;
+      var handle = this;
+      downloadChecklistPngs(cards)
+        .catch(function() {
+          window.alert("Could not create the PNG. Please try again.");
+        })
+        .then(function() {
+          handle.exportingPng = false;
+        });
+    },
     onDownloadMarkdown: function() {
       var data = this.checklistSets;
       var lines = [];
@@ -291,6 +356,10 @@ export default {
         localStorage.setItem("user_raw_data", newVal);
       }
       this.parse(newVal);
+    },
+    theme: function(newVal) {
+      document.documentElement.setAttribute("data-theme", newVal);
+      localStorage.setItem("theme", newVal);
     }
   },
 }
@@ -300,6 +369,39 @@ export default {
 div {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--link-color);
+}
+
+textarea,
+select {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+}
+
+div.staging-banner {
+  background-color: #fff3cd;
+  color: #000;
+  border-bottom: 1px solid #856404;
+  padding: 6px 10px;
+  text-align: center;
+}
+
+div.theme-picker {
+  margin-bottom: 12px;
+}
+
+div.theme-picker select {
+  max-width: 90%;
+}
+
+div#checklist-preview {
+  display: block;
+  clear: both;
+  overflow: hidden;
 }
 
 @media screen {
@@ -319,16 +421,22 @@ div {
   div#right-pane .file_container {
     width: 90%;
     height: 50px;
-    border: 2px dotted gray;
+    border: 2px dotted var(--dropzone-border);
     text-align: center;
   }
 }
 @media print {
+  div.staging-banner {
+    display: none;
+  }
   div#header {
     display: none;
   }
   div#right-pane, div .instructions, div#editor, div#upload {
     display: none;
+  }
+  div#checklist-preview {
+    overflow: visible;
   }
 }
 </style>

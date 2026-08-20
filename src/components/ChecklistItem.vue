@@ -33,7 +33,7 @@ span.dots {
 span.dots::before {
   content: "..........................................................................................................."; /* Add as many dots as needed */
   letter-spacing: 2px; /* Adjust the spacing between dots */
-  color: #000; /* Set the color to match your design */
+  color: var(--dots-color); /* Set the color to match the active theme */
 }
 </style>
 
