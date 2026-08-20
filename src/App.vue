@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div v-if="isStaging" class="staging-banner">
+      Staging preview — production is unchanged
+    </div>
     <div id="header">
       <h1>Aviation Checklist Creator</h1>
       <div class="instructions">
@@ -27,7 +30,7 @@
         <div v-if="checklistSets.length === 0">
         <p>
           Want a demo? Use
-          <strong><a href="#" v-on:click="loadCSVFromWebURL('/assets/checklists/n934gr.md')">my checklist</a></strong>, make changes, and watch them update.
+          <strong><a href="#" v-on:click="loadCSVFromWebURL(demoChecklistUrl)">my checklist</a></strong>, make changes, and watch them update.
         </p>
         </div>
         <textarea rows="16" cols="62" v-model="user_raw_data" style="overflow-y:scroll;">
@@ -103,7 +106,9 @@ export default {
       user_raw_data: '',
       theme: DEFAULT_THEME,
       themes: THEMES,
-      exportingPng: false
+      exportingPng: false,
+      isStaging: process.env.VUE_APP_STAGING === 'true',
+      demoChecklistUrl: process.env.BASE_URL + 'assets/checklists/n934gr.md'
     }
   },
   created() {
@@ -377,6 +382,14 @@ select {
   border: 1px solid var(--input-border);
 }
 
+div.staging-banner {
+  background-color: #fff3cd;
+  color: #000;
+  border-bottom: 1px solid #856404;
+  padding: 6px 10px;
+  text-align: center;
+}
+
 div.theme-picker {
   margin-bottom: 12px;
 }
@@ -413,6 +426,9 @@ div#checklist-preview {
   }
 }
 @media print {
+  div.staging-banner {
+    display: none;
+  }
   div#header {
     display: none;
   }

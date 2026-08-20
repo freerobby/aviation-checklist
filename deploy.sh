@@ -4,6 +4,12 @@
 set -e
 
 yarn build
+
+# Keep the /staging GitHub Pages preview when publishing production.
+if git fetch origin gh-pages && git ls-tree -d --name-only origin/gh-pages | grep -qx staging; then
+  git archive origin/gh-pages staging | tar -x -C dist
+fi
+
 cd dist
 echo "checklist.robbygrossman.com" > CNAME
 
