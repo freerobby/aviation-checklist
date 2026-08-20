@@ -1,0 +1,17 @@
+{
+  "name": "aviation-checklist",
+  "install": "yarn install --frozen-lockfile --ignore-engines",
+  "terminals": [
+    {
+      "name": "dev-server",
+      "command": "yarn serve",
+      "description": "Vue CLI dev server with hot reload, served at http://localhost:8080/"
+    }
+  ],
+  "ports": [
+    {
+      "name": "dev-server",
+      "port": 8080
+    }
+  ]
+}
