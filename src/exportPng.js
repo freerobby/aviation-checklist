@@ -1,6 +1,9 @@
 import html2canvas from "html2canvas";
 import JSZip from "jszip";
 
+export var COMBINED_COLUMNS = 3;
+export var COMBINED_FILENAME = "full-checklist.png";
+
 export function sanitizeFilename(name) {
   var cleaned = String(name || "checklist")
     .replace(/[^\w\s-]+/g, "")
@@ -44,14 +47,46 @@ export function canvasToBlob(canvas) {
   });
 }
 
-export function captureElementPng(element) {
+export function captureElementCanvas(element) {
   var backgroundColor = window.getComputedStyle(element).backgroundColor || "#ffffff";
   return html2canvas(element, {
     backgroundColor: backgroundColor,
     scale: 2,
     logging: false,
     useCORS: true
-  }).then(canvasToBlob);
+  });
+}
+
+export function stitchCanvases(canvases, columns, backgroundColor) {
+  var colCount = Math.min(columns || COMBINED_COLUMNS, canvases.length);
+  var rowCount = Math.ceil(canvases.length / colCount);
+  var cellWidth = 0;
+  var cellHeight = 0;
+  canvases.forEach(function(canvas) {
+    if (canvas.width > cellWidth) {
+      cellWidth = canvas.width;
+    }
+    if (canvas.height > cellHeight) {
+      cellHeight = canvas.height;
+    }
+  });
+
+  var combined = document.createElement("canvas");
+  combined.width = colCount * cellWidth;
+  combined.height = rowCount * cellHeight;
+  var ctx = combined.getContext("2d");
+  ctx.fillStyle = backgroundColor || "#ffffff";
+  ctx.fillRect(0, 0, combined.width, combined.height);
+  canvases.forEach(function(canvas, index) {
+    var x = (index % colCount) * cellWidth;
+    var y = Math.floor(index / colCount) * cellHeight;
+    ctx.drawImage(canvas, x, y);
+  });
+  return combined;
+}
+
+function pageBackgroundColor() {
+  return window.getComputedStyle(document.documentElement).getPropertyValue("--page-bg").trim() || "#ffffff";
 }
 
 export function downloadChecklistPngs(cards) {
@@ -59,27 +94,51 @@ export function downloadChecklistPngs(cards) {
     return Promise.resolve();
   }
 
-  if (cards.length === 1) {
-    return captureElementPng(cards[0].element).then(function(blob) {
-      triggerBlobDownload(blob, sanitizeFilename(cards[0].title) + ".png");
-    });
-  }
-
-  var zip = new JSZip();
-  var usedNames = {};
+  var captured = [];
   var chain = Promise.resolve();
 
   cards.forEach(function(card) {
     chain = chain.then(function() {
-      return captureElementPng(card.element).then(function(blob) {
-        zip.file(uniqueFilename(card.title, usedNames) + ".png", blob);
+      return captureElementCanvas(card.element).then(function(canvas) {
+        captured.push({ title: card.title, canvas: canvas });
       });
     });
   });
 
   return chain.then(function() {
-    return zip.generateAsync({ type: "blob" });
-  }).then(function(zipBlob) {
-    triggerBlobDownload(zipBlob, "checklist-png.zip");
+    if (captured.length === 1) {
+      return canvasToBlob(captured[0].canvas).then(function(blob) {
+        triggerBlobDownload(blob, sanitizeFilename(captured[0].title) + ".png");
+      });
+    }
+
+    var zip = new JSZip();
+    var usedNames = {};
+    var blobChain = Promise.resolve();
+
+    captured.forEach(function(item) {
+      blobChain = blobChain.then(function() {
+        return canvasToBlob(item.canvas).then(function(blob) {
+          zip.file(uniqueFilename(item.title, usedNames) + ".png", blob);
+        });
+      });
+    });
+
+    return blobChain.then(function() {
+      var combined = stitchCanvases(
+        captured.map(function(item) {
+          return item.canvas;
+        }),
+        COMBINED_COLUMNS,
+        pageBackgroundColor()
+      );
+      return canvasToBlob(combined).then(function(blob) {
+        zip.file(COMBINED_FILENAME, blob);
+      });
+    }).then(function() {
+      return zip.generateAsync({ type: "blob" });
+    }).then(function(zipBlob) {
+      triggerBlobDownload(zipBlob, "checklist-png.zip");
+    });
   });
 }

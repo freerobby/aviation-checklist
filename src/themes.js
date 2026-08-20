@@ -17,6 +17,16 @@ export const THEMES = [
     description: "Black background, white text"
   },
   {
+    id: "black-on-white",
+    name: "Black on White",
+    description: "Pure black on white, no color"
+  },
+  {
+    id: "white-on-black",
+    name: "White on Black",
+    description: "Pure white on black, no color"
+  },
+  {
     id: "night",
     name: "Night",
     description: "Amber text on black"

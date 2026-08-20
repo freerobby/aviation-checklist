@@ -58,6 +58,46 @@ html[data-theme="dark"] {
   --link-color: #8ab4f8;
 }
 
+html[data-theme="black-on-white"] {
+  --page-bg: #ffffff;
+  --page-text: #000000;
+  --card-bg: #ffffff;
+  --card-text: #000000;
+  --card-border: #000000;
+  --card-border-width: 1px;
+  --header-bg: #000000;
+  --header-text: #ffffff;
+  --emergency-header-bg: #000000;
+  --reference-header-bg: #000000;
+  --generated-text: #000000;
+  --dots-color: #000000;
+  --input-bg: #ffffff;
+  --input-text: #000000;
+  --input-border: #000000;
+  --dropzone-border: #000000;
+  --link-color: #000000;
+}
+
+html[data-theme="white-on-black"] {
+  --page-bg: #000000;
+  --page-text: #ffffff;
+  --card-bg: #000000;
+  --card-text: #ffffff;
+  --card-border: #ffffff;
+  --card-border-width: 1px;
+  --header-bg: #ffffff;
+  --header-text: #000000;
+  --emergency-header-bg: #ffffff;
+  --reference-header-bg: #ffffff;
+  --generated-text: #ffffff;
+  --dots-color: #ffffff;
+  --input-bg: #000000;
+  --input-text: #ffffff;
+  --input-border: #ffffff;
+  --dropzone-border: #ffffff;
+  --link-color: #ffffff;
+}
+
 html[data-theme="night"] {
   --page-bg: #0a0a0a;
   --page-text: #ffb000;

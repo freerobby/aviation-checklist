@@ -65,7 +65,7 @@
             </li>
             <li>
               <a href="#" v-on:click="onDownloadPNG">{{ exportingPng ? 'Preparing PNG…' : 'PNG' }}</a>
-              (one image per section, already cropped)
+              (each section, plus one image of the full checklist)
             </li>
             <li>Use print dialog to save to PDF (3 sections per page).</li>
             <li>
