@@ -89,10 +89,12 @@ function pageBackgroundColor() {
   return window.getComputedStyle(document.documentElement).getPropertyValue("--page-bg").trim() || "#ffffff";
 }
 
-export function downloadChecklistPngs(cards) {
+export function downloadChecklistPngs(cards, options) {
   if (!cards || cards.length === 0) {
     return Promise.resolve();
   }
+  var columns = (options && options.columns) || COMBINED_COLUMNS;
+  var includeCombined = !(options && options.includeCombined === false);
 
   var captured = [];
   var chain = Promise.resolve();
@@ -125,11 +127,14 @@ export function downloadChecklistPngs(cards) {
     });
 
     return blobChain.then(function() {
+      if (!includeCombined || columns < 2) {
+        return;
+      }
       var combined = stitchCanvases(
         captured.map(function(item) {
           return item.canvas;
         }),
-        COMBINED_COLUMNS,
+        columns,
         pageBackgroundColor()
       );
       return canvasToBlob(combined).then(function(blob) {

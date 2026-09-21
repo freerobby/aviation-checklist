@@ -1,4 +1,3 @@
-
 <template>
   <li>
     <div class="checklist-item">
@@ -6,6 +5,11 @@
       <span class="dots"></span>
       {{ item.operation }}
     </div>
+    <div
+      v-for="(annotation, index) in item.annotations"
+      v-bind:key="index"
+      v-bind:class="annotation.kind === 'warning' ? 'checklist-warning' : 'checklist-note'"
+    >{{ annotation.text }}</div>
   </li>
 </template>
 
@@ -36,4 +40,3 @@ span.dots::before {
   color: var(--dots-color); /* Set the color to match the active theme */
 }
 </style>
-

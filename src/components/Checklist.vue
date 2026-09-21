@@ -1,6 +1,11 @@
 <template>
   <div class="checklist">
     <h2> {{ title }}</h2>
+    <div
+      v-for="(annotation, index) in annotations"
+      v-bind:key="index"
+      v-bind:class="annotation.kind === 'warning' ? 'checklist-warning' : 'checklist-note'"
+    >{{ annotation.text }}</div>
     <ul>
       <checklist-item v-for="item in items" v-bind:item="item" v-bind:key="item.id"></checklist-item>
     </ul>
@@ -13,7 +18,7 @@ import ChecklistItem from "./ChecklistItem.vue";
 export default {
   name: "Checklist",
   components: {ChecklistItem},
-  props: ["title", "items"]
+  props: ["title", "items", "annotations"]
 }
 </script>
 

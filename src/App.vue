@@ -11,10 +11,16 @@
             Write your checklist in the following format:
             <pre>
 # Name of Section
+> Optional note, centered and italic, at the bottom of this page
+!> Optional warning or caution, centered and bold
 
 ## Name of Checklist 1
+> Optional note, centered and italic, under the checklist title
+!> Optional warning or caution, centered and bold
 
 * Item 1: Action to Perform
+> Optional note, centered and italic, under this item
+!> Optional warning or caution, centered and bold
 * Item 2: Action to Perform
 
 ## Name of Checklist 2
@@ -48,6 +54,14 @@
             </option>
           </select>
         </div>
+        <div class="page-size-picker">
+          <p><strong>Page size</strong></p>
+          <select v-model="pageSize" aria-label="Checklist page size">
+            <option v-for="s in pageSizes" v-bind:key="s.id" v-bind:value="s.id">
+              {{ s.name }} — {{ s.description }}
+            </option>
+          </select>
+        </div>
         <div v-if="checklistSets.length > 0">
           <p><strong>Download</strong></p>
           <ul>
@@ -65,9 +79,9 @@
             </li>
             <li>
               <a href="#" v-on:click="onDownloadPNG">{{ exportingPng ? 'Preparing PNG…' : 'PNG' }}</a>
-              (each section, plus one image of the full checklist)
+              ({{ pngDownloadHint }})
             </li>
-            <li>Use print dialog to save to PDF (3 sections per page).</li>
+            <li>{{ printHint }}</li>
             <li>
               Want another format? Let me know at robby@freerobby.com.
             </li>
@@ -80,6 +94,10 @@
           v-for="(checklistSet, index) in checklistSets"
           v-bind:title="checklistSet.title"
           v-bind:checklists="checklistSet.checklists"
+          v-bind:annotations="checklistSet.annotations"
+          v-bind:layout="pageSizePreset.layout"
+          v-bind:crop-guides="pageSizePreset.cropGuides"
+          v-bind:page-size="pageSize"
           v-bind:key="checklistSet.id"
           v-bind:generated="(index === 0)?'Printed ' + formatted_date():''"
       ></checklist-set>
@@ -90,7 +108,9 @@
 <script>
 import ChecklistSet from "@/components/ChecklistSet";
 import { THEMES, DEFAULT_THEME, isValidTheme } from "@/themes";
+import { PAGE_SIZES, DEFAULT_PAGE_SIZE, isValidPageSize, getPageSize } from "@/pageSizes";
 import { downloadChecklistPngs } from "@/exportPng";
+import { parseMarkdown, checklistSetsFromCsvRows, markdownFromChecklistSets } from "@/checklistParser";
 
 import papa from "papaparse";
 
@@ -106,9 +126,29 @@ export default {
       user_raw_data: '',
       theme: DEFAULT_THEME,
       themes: THEMES,
+      pageSize: DEFAULT_PAGE_SIZE,
+      pageSizes: PAGE_SIZES,
       exportingPng: false,
       isStaging: process.env.VUE_APP_STAGING === 'true',
       demoChecklistUrl: process.env.BASE_URL + 'assets/checklists/n934gr.md'
+    }
+  },
+  computed: {
+    pageSizePreset: function() {
+      return getPageSize(this.pageSize);
+    },
+    printHint: function() {
+      var preset = this.pageSizePreset;
+      if (preset.printHint) {
+        return preset.printHint;
+      }
+      return "Use print dialog to save to PDF (" + preset.cardsPerPage + " sections per page).";
+    },
+    pngDownloadHint: function() {
+      if (this.pageSizePreset.pngColumns < 2) {
+        return "one image per section";
+      }
+      return "each section, plus one image of the full checklist";
     }
   },
   created() {
@@ -117,15 +157,53 @@ export default {
       this.theme = savedTheme;
     }
     document.documentElement.setAttribute("data-theme", this.theme);
+
+    var savedPageSize = localStorage.getItem("pageSize");
+    if (isValidPageSize(savedPageSize)) {
+      this.pageSize = savedPageSize;
+    }
+    this.applyPageSize(this.pageSize);
   },
   beforeMount() {
     if (localStorage.getItem("user_raw_data") !== null)
       this.user_raw_data = localStorage.getItem("user_raw_data");
   },
   methods: {
+    appendDynonAnnotations: function(lines, checklistIndex, lineNum, annotations) {
+      (annotations || []).forEach(function(annotation) {
+        var text = annotation.text.replace(/\n/g, " / ");
+        if (annotation.kind === "warning") {
+          text = "WARNING: " + text;
+        }
+        lines.push(
+            "CHKLST" +
+            checklistIndex.toString() +
+            ".LINE" + lineNum.toString() +
+            ", " +
+            text
+        );
+        lineNum++;
+      });
+      return lineNum;
+    },
     formatted_date: function() {
       var d = new Date();
       return d.toDateString()
+    },
+    applyPageSize: function(id) {
+      var preset = getPageSize(id);
+      document.documentElement.style.setProperty("--card-width", preset.cardWidth);
+      document.documentElement.style.setProperty("--card-height", preset.cardHeight);
+      document.documentElement.style.setProperty("--card-padding", preset.cardPadding || "0");
+      document.documentElement.setAttribute("data-page-layout", preset.layout);
+
+      var style = document.getElementById("page-size-print");
+      if (!style) {
+        style = document.createElement("style");
+        style.id = "page-size-print";
+        document.head.appendChild(style);
+      }
+      style.textContent = "@media print { @page { size: " + preset.paper + "; margin: 0; } }";
     },
     importFile: function(event) {
       let csv_file = event.dataTransfer.files[0];
@@ -167,28 +245,32 @@ export default {
       for (var set = 0; set < data.length; set++) {
         for (var checklist = 0; checklist < data[set].checklists.length; checklist++) {
           lines.push("CHKLST" + (num_checklists).toString() + ".TITLE, " + data[set].title + ": " + data[set].checklists[checklist].title);
+          var lineNum = 1;
+          lineNum = this.appendDynonAnnotations(lines, num_checklists, lineNum, data[set].checklists[checklist].annotations);
           for (var i = 0; i < data[set].checklists[checklist].items.length; i++) {
-            if (data[set].checklists[checklist].items[i].operation !== undefined) {
+            var dynonItem = data[set].checklists[checklist].items[i];
+            if (dynonItem.operation !== undefined) {
               lines.push(
                   "CHKLST" +
                   (num_checklists).toString() +
-                  ".LINE" + (i+1).toString() +
+                  ".LINE" + lineNum.toString() +
                   ", " +
-                  data[set].checklists[checklist].items[i].subject +
+                  dynonItem.subject +
                   ": " +
-                  data[set].checklists[checklist].items[i].operation
+                  dynonItem.operation
               );
             }
             else {
               lines.push(
                   "CHKLST" +
                   (num_checklists).toString() +
-                  ".LINE" + (i+1).toString() +
+                  ".LINE" + lineNum.toString() +
                   ", " +
-                  data[set].checklists[checklist].items[i].subject
+                  dynonItem.subject
               );
             }
-
+            lineNum++;
+            lineNum = this.appendDynonAnnotations(lines, num_checklists, lineNum, dynonItem.annotations);
           }
 
           num_checklists++;
@@ -212,8 +294,14 @@ export default {
 
           this_export_checklist["checklistItems"] = [];
           for (var i = 0; i < data[set].checklists[checklist].items.length; i++) {
+            var item = data[set].checklists[checklist].items[i];
+            var name = item.subject + " - " + item.operation;
+            (item.annotations || []).forEach(function(annotation) {
+              var label = annotation.kind === "warning" ? "WARNING: " : "";
+              name += " (" + label + annotation.text.replace(/\n/g, " / ") + ")";
+            });
             this_export_checklist["checklistItems"].push({
-              "name": data[set].checklists[checklist].items[i].subject + " - " + data[set].checklists[checklist].items[i].operation,
+              "name": name,
               "completed": false
             });
           }
@@ -250,7 +338,8 @@ export default {
 
       this.exportingPng = true;
       var handle = this;
-      downloadChecklistPngs(cards)
+      var columns = this.pageSizePreset.pngColumns;
+      downloadChecklistPngs(cards, { columns: columns, includeCombined: columns >= 2 })
         .catch(function() {
           window.alert("Could not create the PNG. Please try again.");
         })
@@ -259,51 +348,10 @@ export default {
         });
     },
     onDownloadMarkdown: function() {
-      var data = this.checklistSets;
-      var lines = [];
-      for (var set = 0; set < data.length; set++) {
-        lines.push("# " + data[set].title);
-        lines.push("");
-        for (var checklist = 0; checklist < data[set].checklists.length; checklist++) {
-          lines.push("## " + data[set].checklists[checklist].title);
-          lines.push("");
-          for (var i = 0; i < data[set].checklists[checklist].items.length; i++) {
-            if (data[set].checklists[checklist].items[i].operation !== undefined) {
-              lines.push("* " + data[set].checklists[checklist].items[i].subject + ": " + data[set].checklists[checklist].items[i].operation);
-            }
-            else {
-              lines.push("* " + data[set].checklists[checklist].items[i].subject);
-            }
-          }
-          lines.push("");
-        }
-      }
-      
-      this.initiatePlaintextDownload("checklist.md", lines.join("\n"));
+      this.initiatePlaintextDownload("checklist.md", markdownFromChecklistSets(this.checklistSets));
     },
     handle_update_csv: function(results) {
-      var csv_data = results.data
-      var checklist_sets = [];
-
-      var current_checklistset = null;
-      var current_checklist = null;
-      for (let i = 0; i < csv_data.length; i++) {
-        if (csv_data[i].length < 2 && csv_data[i][0] === "") {
-          continue; // Skip partial lines.
-        }
-        if (csv_data[i][0] !== current_checklistset) {
-          checklist_sets.push({title: csv_data[i][0], checklists: []});
-          current_checklistset = csv_data[i][0];
-          current_checklist = null;
-        }
-        if (csv_data[i][1] !== current_checklist) {
-          checklist_sets.slice(-1)[0]['checklists'].push({title: csv_data[i][1], items: []})
-          current_checklist = csv_data[i][1];
-        }
-        checklist_sets.slice(-1)[0]['checklists'].slice(-1)[0].items.push({subject: csv_data[i][2], operation: csv_data[i][3]});
-      }
-
-      this.checklistSets = checklist_sets;
+      this.checklistSets = checklistSetsFromCsvRows(results.data);
     },
     parse: function(raw) {
       if (raw.substring(0, 1) === "#")
@@ -320,34 +368,7 @@ export default {
       });
     },
     parse_md: function(raw) {
-      var md_data = raw.split("\n");
-      var checklist_sets = [];
-
-      while (md_data.length > 0) {
-        var row = md_data.shift();
-        if (row.substring(0,2) === "# ") {
-          checklist_sets.push({title: row.substring(2), checklists: []});
-        }
-        else if (row.substring(0,3) === "## ") {
-          checklist_sets.slice(-1)[0]['checklists'].push({title: row.substring(3), items: []})
-        }
-        else if (row.substring(0, 2) === "* ") {
-          var index = row.indexOf(": ");
-          if (index >= 0) {
-            checklist_sets.slice(-1)[0]['checklists'].slice(-1)[0].items.push({
-              subject: row.substring(2, index),
-              operation: row.substring(index + 2)
-            });
-          }
-          else {
-            checklist_sets.slice(-1)[0]['checklists'].slice(-1)[0].items.push({
-              subject: row.substring(2)
-            })
-          }
-        }
-      }
-
-      this.checklistSets = checklist_sets;
+      this.checklistSets = parseMarkdown(raw);
     }
   },
   watch: {
@@ -360,6 +381,10 @@ export default {
     theme: function(newVal) {
       document.documentElement.setAttribute("data-theme", newVal);
       localStorage.setItem("theme", newVal);
+    },
+    pageSize: function(newVal) {
+      this.applyPageSize(newVal);
+      localStorage.setItem("pageSize", newVal);
     }
   },
 }
@@ -390,11 +415,13 @@ div.staging-banner {
   text-align: center;
 }
 
-div.theme-picker {
+div.theme-picker,
+div.page-size-picker {
   margin-bottom: 12px;
 }
 
-div.theme-picker select {
+div.theme-picker select,
+div.page-size-picker select {
   max-width: 90%;
 }
 
