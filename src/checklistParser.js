@@ -7,26 +7,34 @@ function lastChecklist(sets) {
   return set && set.checklists.length ? set.checklists[set.checklists.length - 1] : null;
 }
 
-function appendNote(target, field, text) {
+function appendAnnotation(target, kind, text) {
   if (!target) {
     return;
   }
-  if (target[field]) {
-    target[field] += "\n" + text;
+  if (!target.annotations) {
+    target.annotations = [];
+  }
+  var last = target.annotations[target.annotations.length - 1];
+  if (last && last.kind === kind) {
+    last.text += "\n" + text;
   } else {
-    target[field] = text;
+    target.annotations.push({ kind: kind, text: text });
   }
 }
 
-function noteLines(note) {
-  return String(note || "").split("\n");
+function writeAnnotations(lines, annotations) {
+  (annotations || []).forEach(function(annotation) {
+    var marker = annotation.kind === "warning" ? "!>" : ">";
+    String(annotation.text || "").split("\n").forEach(function(line) {
+      lines.push(marker + " " + line);
+    });
+  });
 }
 
 function parseMarkdown(raw) {
   var md_data = String(raw || "").split("\n");
   var checklist_sets = [];
   var lastTarget = null;
-  var lastField = "note";
 
   while (md_data.length > 0) {
     var row = md_data.shift();
@@ -36,12 +44,10 @@ function parseMarkdown(raw) {
       var set = { title: trimmed.substring(2), checklists: [] };
       checklist_sets.push(set);
       lastTarget = set;
-      lastField = "footerNote";
     } else if (trimmed.substring(0, 3) === "## ") {
       var checklist = { title: trimmed.substring(3), items: [] };
       lastSet(checklist_sets).checklists.push(checklist);
       lastTarget = checklist;
-      lastField = "note";
     } else if (trimmed.substring(0, 2) === "* ") {
       var item;
       var index = trimmed.indexOf(": ");
@@ -55,10 +61,10 @@ function parseMarkdown(raw) {
       }
       lastChecklist(checklist_sets).items.push(item);
       lastTarget = item;
-      lastField = "note";
+    } else if (trimmed.substring(0, 2) === "!>") {
+      appendAnnotation(lastTarget, "warning", trimmed.substring(2).replace(/^\s+/, ""));
     } else if (trimmed.charAt(0) === ">") {
-      var noteText = trimmed.substring(1).replace(/^\s+/, "");
-      appendNote(lastTarget, lastField, noteText);
+      appendAnnotation(lastTarget, "note", trimmed.substring(1).replace(/^\s+/, ""));
     }
   }
 
@@ -85,7 +91,7 @@ function checklistSetsFromCsvRows(csv_data) {
     }
     var item = { subject: csv_data[i][2], operation: csv_data[i][3] };
     if (csv_data[i][4]) {
-      item.note = csv_data[i][4];
+      appendAnnotation(item, "note", csv_data[i][4]);
     }
     lastChecklist(checklist_sets).items.push(item);
   }
@@ -98,19 +104,15 @@ function markdownFromChecklistSets(data) {
   for (var set = 0; set < data.length; set++) {
     lines.push("# " + data[set].title);
     lines.push("");
-    if (data[set].footerNote) {
-      noteLines(data[set].footerNote).forEach(function(line) {
-        lines.push("> " + line);
-      });
+    if (data[set].annotations && data[set].annotations.length) {
+      writeAnnotations(lines, data[set].annotations);
       lines.push("");
     }
     for (var checklist = 0; checklist < data[set].checklists.length; checklist++) {
       lines.push("## " + data[set].checklists[checklist].title);
       lines.push("");
-      if (data[set].checklists[checklist].note) {
-        noteLines(data[set].checklists[checklist].note).forEach(function(line) {
-          lines.push("> " + line);
-        });
+      if (data[set].checklists[checklist].annotations && data[set].checklists[checklist].annotations.length) {
+        writeAnnotations(lines, data[set].checklists[checklist].annotations);
         lines.push("");
       }
       for (var i = 0; i < data[set].checklists[checklist].items.length; i++) {
@@ -120,11 +122,7 @@ function markdownFromChecklistSets(data) {
         } else {
           lines.push("* " + item.subject);
         }
-        if (item.note) {
-          noteLines(item.note).forEach(function(line) {
-            lines.push("> " + line);
-          });
-        }
+        writeAnnotations(lines, item.annotations);
       }
       lines.push("");
     }

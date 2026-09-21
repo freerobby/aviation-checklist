@@ -151,11 +151,22 @@ body {
   color: var(--page-text);
 }
 
-.checklist-note {
+.checklist-note,
+.checklist-warning {
   text-align: center;
-  font-style: italic;
   font-size: 0.85em;
   white-space: pre-line;
-  color: var(--note-text, var(--card-text));
   padding: 2px 6px;
+}
+
+.checklist-note {
+  font-style: italic;
+  font-weight: normal;
+  color: var(--note-text, var(--card-text));
+}
+
+.checklist-warning {
+  font-style: normal;
+  font-weight: bold;
+  color: var(--card-text);
 }

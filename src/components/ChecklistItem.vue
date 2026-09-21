@@ -5,7 +5,11 @@
       <span class="dots"></span>
       {{ item.operation }}
     </div>
-    <div v-if="item.note" class="checklist-note">{{ item.note }}</div>
+    <div
+      v-for="(annotation, index) in item.annotations"
+      v-bind:key="index"
+      v-bind:class="annotation.kind === 'warning' ? 'checklist-warning' : 'checklist-note'"
+    >{{ annotation.text }}</div>
   </li>
 </template>
 

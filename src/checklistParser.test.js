@@ -18,10 +18,10 @@ describe("parseMarkdown notes", () => {
 > If fire persists, land immediately
 * Fuel Selector: Off
 `);
-    assert.equal(sets[0].footerNote, "Memory items in bold");
-    assert.equal(sets[0].checklists[0].note, "Perform from memory");
-    assert.equal(sets[0].checklists[0].items[0].note, "If fire persists, land immediately");
-    assert.equal(sets[0].checklists[0].items[1].note, undefined);
+    assert.deepEqual(sets[0].annotations, [{ kind: "note", text: "Memory items in bold" }]);
+    assert.deepEqual(sets[0].checklists[0].annotations, [{ kind: "note", text: "Perform from memory" }]);
+    assert.deepEqual(sets[0].checklists[0].items[0].annotations, [{ kind: "note", text: "If fire persists, land immediately" }]);
+    assert.equal(sets[0].checklists[0].items[1].annotations, undefined);
   });
 
   it("joins consecutive note lines", () => {
@@ -34,27 +34,56 @@ describe("parseMarkdown notes", () => {
 > Line one
 > Line two
 `);
-    assert.equal(sets[0].checklists[0].items[0].note, "Line one\nLine two");
+    assert.deepEqual(sets[0].checklists[0].items[0].annotations, [{ kind: "note", text: "Line one\nLine two" }]);
+  });
+
+  it("keeps warnings bold-callouts separate from notes and in source order", () => {
+    const { parseMarkdown } = loadParser();
+    const sets = parseMarkdown(`# Emergency
+!> Footer warning
+
+## Engine Fire
+> Perform from memory
+!> Land as soon as possible
+
+* Mixture: Cutoff
+> If fire persists, land immediately
+!> Fuel selector off
+!> Evacuate upwind
+`);
+    assert.deepEqual(sets[0].annotations, [{ kind: "warning", text: "Footer warning" }]);
+    assert.deepEqual(sets[0].checklists[0].annotations, [
+      { kind: "note", text: "Perform from memory" },
+      { kind: "warning", text: "Land as soon as possible" }
+    ]);
+    assert.deepEqual(sets[0].checklists[0].items[0].annotations, [
+      { kind: "note", text: "If fire persists, land immediately" },
+      { kind: "warning", text: "Fuel selector off\nEvacuate upwind" }
+    ]);
   });
 });
 
 describe("markdown round trip", () => {
-  it("preserves notes through export and parse", () => {
+  it("preserves notes and warnings through export and parse", () => {
     const { parseMarkdown, markdownFromChecklistSets } = loadParser();
     const source = `# Section
 > Footer note
+!> Footer warning
 
 ## Checklist
 > Checklist note
 
 * Item: Action
 > Item note
+!> Item warning
 
 `;
     const once = parseMarkdown(source);
     const exported = markdownFromChecklistSets(once);
     const twice = parseMarkdown(exported);
     assert.deepEqual(twice, once);
+    assert.match(exported, /!> Footer warning/);
+    assert.match(exported, /!> Item warning/);
   });
 });
 
@@ -64,6 +93,6 @@ describe("csv notes", () => {
     const sets = checklistSetsFromCsvRows([
       ["Preflight", "Cockpit", "Mags", "Off", "Key out"]
     ]);
-    assert.equal(sets[0].checklists[0].items[0].note, "Key out");
+    assert.deepEqual(sets[0].checklists[0].items[0].annotations, [{ kind: "note", text: "Key out" }]);
   });
 });

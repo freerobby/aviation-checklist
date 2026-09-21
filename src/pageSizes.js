@@ -14,14 +14,17 @@ export const PAGE_SIZES = [
   },
   {
     id: "insert-5x7.5",
-    name: "Checklist insert 5 × 7½ in",
-    description: "Flight-crew binder pocket (MIL-B-83963 / NSN 7510-21-806-0746)",
-    cardWidth: "5in",
-    cardHeight: "7.5in",
-    paper: "5in 7.5in",
+    name: "Checklist pocket 4¼ × 7¼ in",
+    description: "Binder pocket window (MIL-B-83963 / NSN 7510-21-806-0746)",
+    cardWidth: "4.25in",
+    cardHeight: "7.25in",
+    cardPadding: "0.15in",
+    paper: "letter",
     cardsPerPage: 1,
     layout: "page",
-    pngColumns: 1
+    cropGuides: true,
+    pngColumns: 1,
+    printHint: "Print on US Letter at 100% scale (one section per page). Fold or cut at 4¼ in, then trim the length to 7¼ in. Disable headers and footers."
   },
   {
     id: "a4-3up",

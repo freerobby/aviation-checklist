@@ -11,13 +11,16 @@
             Write your checklist in the following format:
             <pre>
 # Name of Section
-> Optional note centered at the bottom of this page
+> Optional note, centered and italic, at the bottom of this page
+!> Optional warning or caution, centered and bold
 
 ## Name of Checklist 1
-> Optional note centered under the checklist title
+> Optional note, centered and italic, under the checklist title
+!> Optional warning or caution, centered and bold
 
 * Item 1: Action to Perform
-> Optional note centered under this item
+> Optional note, centered and italic, under this item
+!> Optional warning or caution, centered and bold
 * Item 2: Action to Perform
 
 ## Name of Checklist 2
@@ -91,8 +94,9 @@
           v-for="(checklistSet, index) in checklistSets"
           v-bind:title="checklistSet.title"
           v-bind:checklists="checklistSet.checklists"
-          v-bind:footer-note="checklistSet.footerNote"
+          v-bind:annotations="checklistSet.annotations"
           v-bind:layout="pageSizePreset.layout"
+          v-bind:crop-guides="pageSizePreset.cropGuides"
           v-bind:page-size="pageSize"
           v-bind:key="checklistSet.id"
           v-bind:generated="(index === 0)?'Printed ' + formatted_date():''"
@@ -135,9 +139,8 @@ export default {
     },
     printHint: function() {
       var preset = this.pageSizePreset;
-      if (preset.layout === "page") {
-        return "Use print dialog to save to PDF (one section per " + preset.name.toLowerCase() +
-          "). Choose matching paper or print on Letter at 100% and trim; disable headers and footers.";
+      if (preset.printHint) {
+        return preset.printHint;
       }
       return "Use print dialog to save to PDF (" + preset.cardsPerPage + " sections per page).";
     },
@@ -166,6 +169,23 @@ export default {
       this.user_raw_data = localStorage.getItem("user_raw_data");
   },
   methods: {
+    appendDynonAnnotations: function(lines, checklistIndex, lineNum, annotations) {
+      (annotations || []).forEach(function(annotation) {
+        var text = annotation.text.replace(/\n/g, " / ");
+        if (annotation.kind === "warning") {
+          text = "WARNING: " + text;
+        }
+        lines.push(
+            "CHKLST" +
+            checklistIndex.toString() +
+            ".LINE" + lineNum.toString() +
+            ", " +
+            text
+        );
+        lineNum++;
+      });
+      return lineNum;
+    },
     formatted_date: function() {
       var d = new Date();
       return d.toDateString()
@@ -174,6 +194,7 @@ export default {
       var preset = getPageSize(id);
       document.documentElement.style.setProperty("--card-width", preset.cardWidth);
       document.documentElement.style.setProperty("--card-height", preset.cardHeight);
+      document.documentElement.style.setProperty("--card-padding", preset.cardPadding || "0");
       document.documentElement.setAttribute("data-page-layout", preset.layout);
 
       var style = document.getElementById("page-size-print");
@@ -225,26 +246,18 @@ export default {
         for (var checklist = 0; checklist < data[set].checklists.length; checklist++) {
           lines.push("CHKLST" + (num_checklists).toString() + ".TITLE, " + data[set].title + ": " + data[set].checklists[checklist].title);
           var lineNum = 1;
-          if (data[set].checklists[checklist].note) {
-            lines.push(
-                "CHKLST" +
-                (num_checklists).toString() +
-                ".LINE" + lineNum.toString() +
-                ", " +
-                data[set].checklists[checklist].note.replace(/\n/g, " / ")
-            );
-            lineNum++;
-          }
+          lineNum = this.appendDynonAnnotations(lines, num_checklists, lineNum, data[set].checklists[checklist].annotations);
           for (var i = 0; i < data[set].checklists[checklist].items.length; i++) {
-            if (data[set].checklists[checklist].items[i].operation !== undefined) {
+            var dynonItem = data[set].checklists[checklist].items[i];
+            if (dynonItem.operation !== undefined) {
               lines.push(
                   "CHKLST" +
                   (num_checklists).toString() +
                   ".LINE" + lineNum.toString() +
                   ", " +
-                  data[set].checklists[checklist].items[i].subject +
+                  dynonItem.subject +
                   ": " +
-                  data[set].checklists[checklist].items[i].operation
+                  dynonItem.operation
               );
             }
             else {
@@ -253,20 +266,11 @@ export default {
                   (num_checklists).toString() +
                   ".LINE" + lineNum.toString() +
                   ", " +
-                  data[set].checklists[checklist].items[i].subject
+                  dynonItem.subject
               );
             }
             lineNum++;
-            if (data[set].checklists[checklist].items[i].note) {
-              lines.push(
-                  "CHKLST" +
-                  (num_checklists).toString() +
-                  ".LINE" + lineNum.toString() +
-                  ", " +
-                  data[set].checklists[checklist].items[i].note.replace(/\n/g, " / ")
-              );
-              lineNum++;
-            }
+            lineNum = this.appendDynonAnnotations(lines, num_checklists, lineNum, dynonItem.annotations);
           }
 
           num_checklists++;
@@ -292,9 +296,10 @@ export default {
           for (var i = 0; i < data[set].checklists[checklist].items.length; i++) {
             var item = data[set].checklists[checklist].items[i];
             var name = item.subject + " - " + item.operation;
-            if (item.note) {
-              name += " (" + item.note.replace(/\n/g, " / ") + ")";
-            }
+            (item.annotations || []).forEach(function(annotation) {
+              var label = annotation.kind === "warning" ? "WARNING: " : "";
+              name += " (" + label + annotation.text.replace(/\n/g, " / ") + ")";
+            });
             this_export_checklist["checklistItems"].push({
               "name": name,
               "completed": false
