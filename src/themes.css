@@ -10,6 +10,7 @@
   --emergency-header-bg: #ff371a;
   --reference-header-bg: #4588ff;
   --generated-text: #515151;
+  --note-text: #333333;
   --dots-color: #000000;
   --input-bg: #ffffff;
   --input-text: #000000;
@@ -30,6 +31,7 @@ html[data-theme="light"] {
   --emergency-header-bg: #b00000;
   --reference-header-bg: #003399;
   --generated-text: #333333;
+  --note-text: #222222;
   --dots-color: #000000;
   --input-bg: #ffffff;
   --input-text: #000000;
@@ -50,6 +52,7 @@ html[data-theme="dark"] {
   --emergency-header-bg: #8b1515;
   --reference-header-bg: #1a4a8a;
   --generated-text: #c8c8c8;
+  --note-text: #dddddd;
   --dots-color: #ffffff;
   --input-bg: #1e1e1e;
   --input-text: #ffffff;
@@ -70,6 +73,7 @@ html[data-theme="black-on-white"] {
   --emergency-header-bg: #000000;
   --reference-header-bg: #000000;
   --generated-text: #000000;
+  --note-text: #000000;
   --dots-color: #000000;
   --input-bg: #ffffff;
   --input-text: #000000;
@@ -90,6 +94,7 @@ html[data-theme="white-on-black"] {
   --emergency-header-bg: #ffffff;
   --reference-header-bg: #ffffff;
   --generated-text: #ffffff;
+  --note-text: #ffffff;
   --dots-color: #ffffff;
   --input-bg: #000000;
   --input-text: #ffffff;
@@ -110,6 +115,7 @@ html[data-theme="night"] {
   --emergency-header-bg: #5c0000;
   --reference-header-bg: #001a33;
   --generated-text: #c48a00;
+  --note-text: #e0a000;
   --dots-color: #ffb000;
   --input-bg: #141414;
   --input-text: #ffb000;
@@ -130,6 +136,7 @@ html[data-theme="high-contrast"] {
   --emergency-header-bg: #ff0000;
   --reference-header-bg: #0000ff;
   --generated-text: #000000;
+  --note-text: #000000;
   --dots-color: #000000;
   --input-bg: #ffffff;
   --input-text: #000000;
@@ -142,4 +149,13 @@ html,
 body {
   background-color: var(--page-bg);
   color: var(--page-text);
+}
+
+.checklist-note {
+  text-align: center;
+  font-style: italic;
+  font-size: 0.85em;
+  white-space: pre-line;
+  color: var(--note-text, var(--card-text));
+  padding: 2px 6px;
 }

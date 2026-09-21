@@ -1,4 +1,3 @@
-
 <template>
   <li>
     <div class="checklist-item">
@@ -6,6 +5,7 @@
       <span class="dots"></span>
       {{ item.operation }}
     </div>
+    <div v-if="item.note" class="checklist-note">{{ item.note }}</div>
   </li>
 </template>
 
@@ -36,4 +36,3 @@ span.dots::before {
   color: var(--dots-color); /* Set the color to match the active theme */
 }
 </style>
-

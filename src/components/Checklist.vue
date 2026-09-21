@@ -1,6 +1,7 @@
 <template>
   <div class="checklist">
     <h2> {{ title }}</h2>
+    <div v-if="note" class="checklist-note">{{ note }}</div>
     <ul>
       <checklist-item v-for="item in items" v-bind:item="item" v-bind:key="item.id"></checklist-item>
     </ul>
@@ -13,7 +14,7 @@ import ChecklistItem from "./ChecklistItem.vue";
 export default {
   name: "Checklist",
   components: {ChecklistItem},
-  props: ["title", "items"]
+  props: ["title", "items", "note"]
 }
 </script>
 
